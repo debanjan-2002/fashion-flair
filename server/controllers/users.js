@@ -1,6 +1,7 @@
 import User from "../models/users.js";
 import ExpressError from "../utils/ExpressError.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res, next) => {
     const { email, username, password } = req.body;
@@ -45,9 +46,13 @@ export const login = async (req, res, next) => {
     // If the password matches, then user can be logged in
     if (isMatch) {
         req.session.user = user._id;
+        // sending jwt token that will be stored in local storage in front end
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+            expiresIn: "2h"
+        });
         return res
             .status(200)
-            .json({ message: "User logged in successfully!" });
+            .json({ message: "User logged in successfully!", auth: token });
     }
     // Else send appropriate error
     else {
