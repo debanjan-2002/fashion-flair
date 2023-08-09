@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import session from "express-session";
 
 import userRoutes from "./routes/user.js";
 
@@ -15,6 +16,18 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true
+            // expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+            // maxAge: 1000 * 60 * 60 * 24 * 7
+        }
+    })
+);
 app.use("/api/users", userRoutes);
 
 app.use((err, req, res, next) => {
