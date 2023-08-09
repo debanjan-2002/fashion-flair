@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import session from "express-session";
 import cors from "cors";
 
+import conversationRoutes from "./routes/conversation.js";
 import userRoutes from "./routes/user.js";
 
 dotenv.config();
@@ -31,7 +32,9 @@ app.use(
         }
     })
 );
+
 app.use("/api/users", userRoutes);
+app.use("/api/conversations", conversationRoutes);
 
 app.use((err, req, res, next) => {
     if (!err.statusCode) {
