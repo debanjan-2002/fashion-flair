@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Conversation from "./conversations.js";
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -17,7 +18,8 @@ const userSchema = new Schema({
         required: true
     },
     browsingHistory: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-    purchaseHistory: [{ type: Schema.Types.ObjectId, ref: "Product" }]
+    purchaseHistory: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    conversationHistory: [{ type: Schema.Types.ObjectId, ref: "Conversation" }]
 });
 
 const User = mongoose.model("User", userSchema);
