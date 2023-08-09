@@ -45,9 +45,9 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.password);
     // If the password matches, then user can be logged in
     if (isMatch) {
-        req.session.user = user._id;
+        req.session.userId = user._id;
         // sending jwt token that will be stored in local storage in front end
-        const token = jwt.sign({ user }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: "2h"
         });
         return res
@@ -62,6 +62,6 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
     // Remove the current user from session
-    req.session.user = "";
+    req.session.userId = "";
     res.status(200).json({ message: "User logout successful!" });
 };
