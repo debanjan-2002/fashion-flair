@@ -1,47 +1,37 @@
 import React, { useState } from 'react';
-import axios from "axios"
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here we can do our logic
 
-    async function login() {
-      const data = {
-        email: email,
-        password: password
-      };
-  
-      try {
-        const response = await fetch('http://localhost:3000/api/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-        
-        const data1 = await response.json()
-        console.log(data1)
-  
-        if (response.ok) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      email: email,
+      password: password
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+       if (response.ok) {
           console.log('Login successful');
+          window.location.href = '/chat';
         } else {
           console.error('Login failed');
         }
       } catch (error) {
         console.error('Error:', error);
-      }
-      
+      } 
     }
-    console.log('Login submitted with:', { email, password });
-    login();
-    
-    
-  };
+
+
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -91,7 +81,7 @@ const Login: React.FC = () => {
         </div>
       </form>
     </div>
-  );
+  )
 };
 
 export default Login;

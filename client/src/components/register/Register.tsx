@@ -20,15 +20,12 @@ const Register: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: email,
-          username: username,
-          password: password
-        })
+        body: JSON.stringify(data)
       });
 
       if (response.ok) {
         console.log('Registration successful');
+        window.location.href = '/login';
       } else {
         console.error('Registration failed');
       }
