@@ -44,6 +44,7 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.password);
     // If the password matches, then user can be logged in
     if (isMatch) {
+        req.session.user = user._id;
         return res
             .status(200)
             .json({ message: "User logged in successfully!" });
@@ -52,4 +53,10 @@ export const login = async (req, res, next) => {
     else {
         return next(new ExpressError("Invalid Credentials", 404));
     }
+};
+
+export const logout = async (req, res, next) => {
+    // Remove the current user from session
+    req.session.user = "";
+    res.status(200).json({ message: "User logout successful!" });
 };
