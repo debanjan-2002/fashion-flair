@@ -28,4 +28,28 @@ export const register = async (req, res, next) => {
     res.status(200).json({ message: "User registered successfully!" });
 };
 
-export const login = (req, res, next) => {};
+export const login = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    // If the user doesn't exist
+    if (!user) {
+        return next(
+            new ExpressError("User doesn't not exist. Kindly register!", 404)
+        );
+    }
+
+    // If the user exist, the match the password
+    const isMatch = await bcrypt.compare(password, user.password);
+    // If the password matches, then user can be logged in
+    if (isMatch) {
+        return res
+            .status(200)
+            .json({ message: "User logged in successfully!" });
+    }
+    // Else send appropriate error
+    else {
+        return next(new ExpressError("Invalid Credentials", 404));
+    }
+};
