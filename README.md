@@ -10,3 +10,4 @@ Conversational Chatbot providing fashion recommendations
 
 -   **(GET)** /api/conversations (Requires valid auth token in request header)
 -   **(POST)** /api/conversations (Requires valid auth token and conversation data)
+-   **(DELETE)** /api/conversations (Requires valid auth token in request header)

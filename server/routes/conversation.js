@@ -4,13 +4,15 @@ const router = express.Router();
 
 import {
     getConversations,
-    addConversations
+    addConversations,
+    deleteConversations
 } from "../controllers/conversations.js";
 import { verifyToken } from "../middleware.js";
 
 router
     .route("/")
     .get(verifyToken, catchAsync(getConversations))
-    .post(verifyToken, catchAsync(addConversations));
+    .post(verifyToken, catchAsync(addConversations))
+    .delete(verifyToken, catchAsync(deleteConversations));
 
 export default router;
