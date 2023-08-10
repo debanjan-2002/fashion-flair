@@ -8,7 +8,7 @@ const conversationSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["User", "Assistant"]
+        enum: ["user", "assistant"]
     }
 });
 
