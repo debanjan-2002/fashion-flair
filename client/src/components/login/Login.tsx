@@ -20,10 +20,21 @@ const Login: React.FC = () => {
         },
         body: JSON.stringify(data)
       });
-       if (response.ok) {
-          console.log('Login successful');
-          window.location.href = '/chat';
-        } else {
+      if (response.ok) {
+        console.log('Login successful');
+        //change the header1 to header2 - TASK
+      
+        // Assuming response.json() returns a Promise
+      response.json().then(data => {
+      const auth = data.auth; // Extract "auth" from the response JSON
+      localStorage.setItem('auth', auth); // Store "auth" in local storage
+
+      window.location.href = '/chat';
+    }).catch(error => {
+      console.error('Error parsing JSON response:', error);
+    });
+  
+      } else {
           console.error('Login failed');
         }
       } catch (error) {
@@ -32,7 +43,16 @@ const Login: React.FC = () => {
     }
 
 
-
+    function checkAuthAndRedirect() {
+      const auth = localStorage.getItem('auth');
+      if (auth) {
+        window.location.href = '/chat';
+      }
+    }
+    
+    // Call the function whenever needed, like on page load
+    checkAuthAndRedirect();
+    
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <form

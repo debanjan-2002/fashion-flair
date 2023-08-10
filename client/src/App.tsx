@@ -8,9 +8,7 @@ import Footer from './components/footer/Footer';
 // import HowToUsePage from './HowToUsePage';
 // const [isLoggedIn, setIsLoggedIn] = useState(false);
 const App: React.FC = () => {
-
-
-
+  
   // setIsLoggedIn(true);
   //use effect - local stored - token exists or not
 

@@ -8,6 +8,16 @@ const ChatSection: React.FC = () => {
 
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
+
+// // To retrieve data
+function autoLoad() {
+  if (localStorage.getItem('auth')) {
+    console.log(localStorage.getItem('auth'));
+  }
+}
+
+  autoLoad(); 
+  
   const handleSend = () => {
     if (userInput.trim() !== '') {
       setMessages([...messages, `You: ${userInput}`]);
