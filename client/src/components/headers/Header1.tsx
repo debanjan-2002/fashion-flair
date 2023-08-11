@@ -1,26 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Header1: React.FC = () => {
+function Header1() {
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null); // Specify the type
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
+
+  //to handle drop down toggle on selecting Login/Register
   const handleDropdownToggle = () => {
     setShowDropdown(!showDropdown);
   };
 
+
+  //to stop showing the dropdown once clicked outside
   const handleDocumentClick = (e: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
       setShowDropdown(false);
     }
   };
-
   useEffect(() => {
     document.addEventListener('click', handleDocumentClick);
     return () => {
       document.removeEventListener('click', handleDocumentClick);
     };
   }, []);
+
 
   return (
     <header className="bg-blue-500 py-4" >
@@ -69,12 +73,20 @@ const Header1: React.FC = () => {
                 About Us
               </NavLink>
             </li>
-            <li>
+            <li className="mr-4">
               <NavLink
                 to="/how-to-use"
                 className="text-white hover:underline"
               >
                 How to Use?
+              </NavLink>
+            </li>
+            <li className="mr-4">
+              <NavLink
+                to="/chat"
+                className="text-white hover:underline"
+              >
+                Start Chatting
               </NavLink>
             </li>
           </ul>

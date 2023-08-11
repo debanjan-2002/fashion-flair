@@ -1,35 +1,36 @@
 import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 
-const Login: React.FC = () => {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const data = {
+
+    //userdata
+    const userData = {
       email: email,
       password: password
     };
 
+    //to send req for login
     try {
       const response = await fetch('http://localhost:3000/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(userData)
       });
       if (response.ok) {
         console.log('Login successful');
-        //change the header1 to header2 - TASK
-      
-        // Assuming response.json() returns a Promise
-      response.json().then(data => {
-      const auth = data.auth; // Extract "auth" from the response JSON
-      localStorage.setItem('auth', auth); // Store "auth" in local storage
-
-      window.location.href = '/chat';
+        response.json().then(data => {
+        const auth = data.auth; // Extract "auth" from the response JSON
+        localStorage.setItem('auth', auth); // Store "auth" in local storage
+        window.location.href = '/chat';
     }).catch(error => {
       console.error('Error parsing JSON response:', error);
     });
@@ -41,17 +42,6 @@ const Login: React.FC = () => {
         console.error('Error:', error);
       } 
     }
-
-
-    function checkAuthAndRedirect() {
-      const auth = localStorage.getItem('auth');
-      if (auth) {
-        window.location.href = '/chat';
-      }
-    }
-    
-    // Call the function whenever needed, like on page load
-    checkAuthAndRedirect();
     
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

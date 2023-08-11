@@ -1,36 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const ChatSection: React.FC = () => {
+
+function ChatSection() {
   const [messages, setMessages] = useState<string[]>([]);
   const [typingText, setTypingText] = useState('');
   const [userInput, setUserInput] = useState('');
-  const [chatbotReply, setChatbotReply] = useState('');
+  const [chatbotReply, setChatbotReply] = useState<string>('');
 
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
+  
+  //logged in or not
+  const auth = localStorage.getItem('auth');
+  if(!auth)  window.location.href = '/login';
 
-// // To retrieve data
+// To retrieve data
 // function autoLoad() {
 //   if (localStorage.getItem('auth')) {
 //     console.log(localStorage.getItem('auth'));
 //   }
 // }
-
 //   autoLoad(); 
-  
-  const handleSend = async () => {
 
-    const auth = localStorage.getItem('auth');
-    if(!auth)  window.location.href = '/login';
-    // let token = null;
+//for scrolling up to see older messages
+useEffect(() => {
+  if (chatBoxRef.current) {
+    chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+  }
+}, [messages]);
 
-    // token = auth
 
-    if (userInput.trim() !== '') {
-      setMessages([...messages, `You: ${userInput}`]);
-      setUserInput('');
-      setChatbotReply("Chatbot: I'm just a demo, so I'll reply here.");
+//add new messages
+const addNewMessage = (input: string) => {
+  setMessages(prevMessages => [
+    ...prevMessages,
+    input
+  ]);
+  // console.log(updatedMessages)
+};
 
+const removeLastMessage = () => {
+
+  console.log(messages);
+  setMessages(prevMessages => prevMessages.slice(0,-1));
+  console.log(messages);
+  // console.log(updatedMessages)
+};
+
+
+
+  //when button is pressed
+const hitSendButton = async () => {
+
+
+
+
+
+  (userInput.trim() !== '') ?  addNewMessage(userInput) : null;
+    await simulateChatbotReply();
+    
+}
+
+//handle chatbot reply
+const simulateChatbotReply = async () => {
+  addNewMessage("Chatbot is typing...");
+  console.log(userInput)
+  const query = userInput;
+  setUserInput('');
+  await handleSend(query)
+  // setTimeout(handleSend, 1000)
+};
+
+  //when a message is sent
+  const handleSend = async (query: string) => {
       try {
         const response = await fetch('http://localhost:3000/api/conversations', {
           method: 'POST',
@@ -39,12 +81,19 @@ const ChatSection: React.FC = () => {
             'x-access-token' : auth!
           },
           body: JSON.stringify({
-            text : userInput,
-            role: 'User'
+            text : query,
+            role: 'user'
           })
         });
         if (response.ok) {
+          const data = await response.json();
+          setChatbotReply(() => data.message)
+          // setTypingText(data.message)
+          removeLastMessage();
+          addNewMessage(data.message);
+          setUserInput('');
           console.log('Send conversation successful');
+
         } else {
             console.error('Send failed');
           }
@@ -52,7 +101,6 @@ const ChatSection: React.FC = () => {
           console.error('Error:', error);
         } 
       }
-    };
 
   const handleTerminate = async () => {
 
@@ -62,6 +110,7 @@ const ChatSection: React.FC = () => {
     setTypingText('');
     setUserInput('');
     setChatbotReply('');
+
     try {
       const response = await fetch('http://localhost:3000/api/conversations', {
         method: 'DELETE',
@@ -71,38 +120,30 @@ const ChatSection: React.FC = () => {
         },
       });
       if (response.ok) {
-        console.log('Send conversation successful');
+        console.log('delete conversation successful');
       } else {
-          console.error('Send failed');
+          console.error('delete failed');
         }
       } catch (error) {
         console.error('Error:', error);
       } 
-    }
+  }
 
-  useEffect(() => {
-    if (typingText === 'Chatbot is typing...') {
-      setTimeout(() => {
-        setTypingText('');
-        setMessages([...messages, chatbotReply]);
-      }, 1500);
-    }
-  }, [typingText, chatbotReply, messages]);
+  // useEffect(() => {
+  //   if (typingText === 'Chatbot is typing...') {
+  //     setTimeout(() => {
+  //       setTypingText('');
+  //       // setMessages([...messages, chatbotReply]);
+  //     }, 1500);
+  //   }
+  // }, [typingText, chatbotReply, messages]);
 
   const handleUserTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
   };
 
-  useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
-  }, [messages]);
-
   useEffect(()=>{
-
     const auth = localStorage.getItem('auth');
-
     async function fetchConversation()  {
 
       if(!auth)  window.location.href = '/login';
@@ -122,14 +163,10 @@ const ChatSection: React.FC = () => {
 
           //extracting texts
           for(let i = 0; i<data.length; i++){
-            console.log(data[i].text);
             arr.push(data[i].text);
           }
-
           setMessages(arr);
 
-          console.log(arr);
-          console.log(data);
           console.log('get conversation successful');
         } else {
             console.error('get convo failed');
@@ -142,47 +179,56 @@ const ChatSection: React.FC = () => {
       fetchConversation();
     }, []);
 
-  return (
+return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-96 bg-white border rounded shadow-md p-4">
+      <div className="w-3/5 bg-white border rounded shadow-md p-4">
         <div
           ref={chatBoxRef}
-          className="h-80 overflow-y-auto mb-4 p-2 bg-gray-200 border rounded"
+          className="h-96 overflow-y-auto mb-4 p-2 bg-gray-200 border rounded"
         >
-          {messages.map((message, index) => (
-            <div key={index} className="mb-2">
-              {index%2==0?'You : ':'Bot : '}
-              {message}
-            </div>
-          ))}
-          {typingText && <div className="mb-2">{typingText}</div>}
-        </div>
-        <div className="mb-2">
-          <input
-            className="w-full border rounded p-2"
-            type="text"
-            placeholder="Type your message..."
-            value={userInput}
-            onChange={handleUserTyping}
-          />
-        </div>
-        <div className="flex justify-between">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleSend}
+      {messages.map((message, index) => (
+        <div
+          key={index}
+          className={`mb-2 ${
+            index % 2 === 0 ? 'text-right' : 'text-left'
+          }`}
+        >
+        <div
+            className={`inline-block p-2 rounded-lg ${
+              index % 2 === 0 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'
+            }`}
           >
-            Send
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleTerminate}
-          >
-            Terminate
-          </button>
+            {message}
+          </div>
         </div>
+        
+      ))}
+    </div>
+      <div className="mb-2">
+        <input
+          className="w-full border rounded p-2"
+          type="text"
+          placeholder="Type your message..."
+          value={userInput}
+          onChange={(evt) => handleUserTyping(evt)}
+        />
+      </div>
+      <div className="flex justify-between">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={hitSendButton}
+        >
+          Send
+        </button>
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleTerminate}
+        >
+          Terminate
+        </button>
       </div>
     </div>
-  );
-};
+  </div>
+)};
 
 export default ChatSection;

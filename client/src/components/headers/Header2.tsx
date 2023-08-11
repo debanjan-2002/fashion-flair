@@ -1,6 +1,13 @@
-import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-const Header2: React.FC = () => {
+function Header2() {
+
+  //to logout and redirect to the url
+  const handleLogout = () => {
+    localStorage.removeItem('auth');
+    window.location.href = '/';
+  };
+
   return (
     <header className="bg-blue-500 py-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -14,24 +21,31 @@ const Header2: React.FC = () => {
         </div>
         <div className="flex items-center">
           <div className="dropdown relative">
-            <button className="text-white font-medium focus:outline-none">
+            <button
+              className="text-white font-medium focus:outline-none"
+              onClick={handleLogout}
+            >
               Logout
             </button>
-            <div className="dropdown-content absolute hidden bg-white rounded mt-2">
-              <a href="#" className="block py-2 px-4 hover:bg-gray-100">
-                Login
-              </a>
-              <a href="#" className="block py-2 px-4 hover:bg-gray-100">
-                Register
-              </a>
-            </div>
           </div>
-          <a href="#" className="text-white ml-4 hover:underline">
+          <NavLink
+            to="/about-us"
+            className="text-white ml-4 hover:underline"
+          >
             About Us
-          </a>
-          <a href="#" className="text-white ml-4 hover:underline">
+          </NavLink>
+          <NavLink
+            to="/how-to-use"
+            className="text-white ml-4 hover:underline"
+          >
             How to Use?
-          </a>
+          </NavLink>
+          <NavLink
+              to="/chat"
+              className="text-white ml-4 hover:underline"
+            >
+                Start Chatting
+          </NavLink>
         </div>
       </div>
     </header>

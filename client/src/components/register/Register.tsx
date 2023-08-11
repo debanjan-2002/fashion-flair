@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const data = {
+    //userData
+    const userData = {
       email: email,
       username: username,
       password: password
@@ -20,12 +23,12 @@ const Register: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(userData)
       });
 
       if (response.ok) {
         console.log('Registration successful');
-        window.location.href = '/login';
+        navigate('/login');
       } else {
         console.error('Registration failed');
       }
