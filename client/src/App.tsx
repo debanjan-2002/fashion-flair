@@ -11,6 +11,7 @@ const App: React.FC = () => {
   
   // setIsLoggedIn(true);
   //use effect - local stored - token exists or not
+  //check for token if valid
 
   return (
     <BrowserRouter>

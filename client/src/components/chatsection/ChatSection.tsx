@@ -10,28 +10,75 @@ const ChatSection: React.FC = () => {
 
 
 // // To retrieve data
-function autoLoad() {
-  if (localStorage.getItem('auth')) {
-    console.log(localStorage.getItem('auth'));
-  }
-}
+// function autoLoad() {
+//   if (localStorage.getItem('auth')) {
+//     console.log(localStorage.getItem('auth'));
+//   }
+// }
 
-  autoLoad(); 
+//   autoLoad(); 
   
-  const handleSend = () => {
+  const handleSend = async () => {
+
+    const auth = localStorage.getItem('auth');
+    if(!auth)  window.location.href = '/login';
+    // let token = null;
+
+    // token = auth
+
     if (userInput.trim() !== '') {
       setMessages([...messages, `You: ${userInput}`]);
       setUserInput('');
       setChatbotReply("Chatbot: I'm just a demo, so I'll reply here.");
-    }
-  };
 
-  const handleTerminate = () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/conversations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token' : auth!
+          },
+          body: JSON.stringify({
+            text : userInput,
+            role: 'User'
+          })
+        });
+        if (response.ok) {
+          console.log('Send conversation successful');
+        } else {
+            console.error('Send failed');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        } 
+      }
+    };
+
+  const handleTerminate = async () => {
+
+    const auth = localStorage.getItem('auth');
+
     setMessages([]);
     setTypingText('');
     setUserInput('');
     setChatbotReply('');
-  };
+    try {
+      const response = await fetch('http://localhost:3000/api/conversations', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token' : auth!
+        },
+      });
+      if (response.ok) {
+        console.log('Send conversation successful');
+      } else {
+          console.error('Send failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } 
+    }
 
   useEffect(() => {
     if (typingText === 'Chatbot is typing...') {
@@ -52,6 +99,49 @@ function autoLoad() {
     }
   }, [messages]);
 
+  useEffect(()=>{
+
+    const auth = localStorage.getItem('auth');
+
+    async function fetchConversation()  {
+
+      if(!auth)  window.location.href = '/login';
+      try {
+        const response = await fetch('http://localhost:3000/api/conversations', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token' : auth!
+          }
+        })
+        if (response.ok) {
+
+          const data = await response.json();
+
+          const arr = []
+
+          //extracting texts
+          for(let i = 0; i<data.length; i++){
+            console.log(data[i].text);
+            arr.push(data[i].text);
+          }
+
+          setMessages(arr);
+
+          console.log(arr);
+          console.log(data);
+          console.log('get conversation successful');
+        } else {
+            console.error('get convo failed');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+
+        }
+      }
+      fetchConversation();
+    }, []);
+
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-96 bg-white border rounded shadow-md p-4">
@@ -61,6 +151,7 @@ function autoLoad() {
         >
           {messages.map((message, index) => (
             <div key={index} className="mb-2">
+              {index%2==0?'You : ':'Bot : '}
               {message}
             </div>
           ))}
