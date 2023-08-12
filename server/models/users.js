@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import Conversation from "./conversations.js";
+import Product from "./products.js";
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
