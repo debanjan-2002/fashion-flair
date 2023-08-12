@@ -4,6 +4,17 @@ import Product from "./products.js";
 
 const { Schema } = mongoose;
 
+const eventSchema = new Schema({
+    event_type: {
+        type: String,
+        required: true
+    },
+    event_time: [{ type: Date, required: true }],
+    product_ids: [
+        { type: Schema.Types.ObjectId, ref: "Product", required: true }
+    ]
+});
+
 const userSchema = new Schema({
     email: {
         type: String,
@@ -19,8 +30,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    browsingHistory: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-    purchaseHistory: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    events: [eventSchema],
     conversationHistory: [{ type: Schema.Types.ObjectId, ref: "Conversation" }]
 });
 
