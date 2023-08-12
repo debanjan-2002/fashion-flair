@@ -1,5 +1,6 @@
 import User from "../models/users.js";
 import Conversation from "../models/conversations.js";
+import Product from "../models/products.js";
 import { fetchResponse, conversationsHistory } from "../utils/fetchResponse.js";
 import { cacheConversations } from "../utils/cacheConversations.js";
 
@@ -47,7 +48,11 @@ export const addConversations = async (req, res, next) => {
     // saving the updated user
     await user.save();
 
-    res.status(200).json({ message: response.content });
+    const temp = JSON.parse(response.content);
+    const product_ids = temp.product_ids;
+    const products = await Product.find({ _id: { $in: product_ids } });
+
+    res.status(200).json({ message: temp.response, products });
 };
 
 export const deleteConversations = async (req, res, next) => {
