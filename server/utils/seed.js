@@ -1,5 +1,6 @@
 import User from "../models/users.js";
 import Conversation from "../models/conversations.js";
+import Product from "../models/products.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -31,6 +32,31 @@ const addDummyConversations = async userId => {
     }
 };
 
-addDummyConversations("64d3b52810290fcad793d06f")
-    .then(() => console.log("success"))
-    .catch(err => console.log(err));
+const addDummyProducts = async () => {
+    // await Product.deleteMany({});
+    const product = new Product({
+        name: "Winter Knit Beanie",
+        brand: "WarmCozy",
+        category: "Accessories",
+        description: "Warm and stylish knit beanie for cold winter days.",
+        price: 19.95,
+        color: "Blue",
+        gender: "Unisex",
+        season: "Winter",
+        tags: ["beanie", "knit hat", "winter accessories"],
+        images: [
+            {
+                url: "https://example.com/beanie_front.jpg",
+                alt_text: "Front View"
+            },
+            {
+                url: "https://example.com/beanie_side.jpg",
+                alt_text: "Side View"
+            }
+        ],
+        rating: 7.0
+    });
+    await product.save();
+};
+
+// addDummyProducts().then(() => console.log("Success"));
