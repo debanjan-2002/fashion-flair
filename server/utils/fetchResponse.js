@@ -1,7 +1,9 @@
 import { Configuration, OpenAIApi } from "openai";
 import dotenv from "dotenv";
+import Product from "../models/products.js";
 
 import { addNewConversationToHistory } from "../utils/cacheConversations.js";
+import { formatData } from "./formatData.js";
 
 dotenv.config();
 
@@ -11,17 +13,47 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const getSystemMessage = () => ({
-    role: "system",
-    content: "You are a helpful assistant."
-});
+let catelog = ``;
+const productCatelog = async () => {
+    if (!catelog) {
+        const products = await Product.find({});
+        console.log(products);
+        catelog = formatData(products);
+    }
+    return catelog;
+};
+
+const getSystemMessage = data => {
+    if (data) {
+        return {
+            role: "system",
+            content: `
+You are a fashion recommender, providing personalized outfit suggestions based on user preferences. Take into account the user's gender, favorite colors, preferred styles, and any specific clothing items they mention. You have access to the following catalog of fashion products. Your task is to recommend outfits using these items. Make sure to only provide suggestions from the catelog.
+Headers - 
+id,name,brand,category,description,price,color,size,gender,season,tags
+The data is provided below following the header format - 
+
+${data}
+
+You will have to provide the response strictly in JSON format which will have the following properties - 
+response: "Your response",
+product_ids: [This will contain the ids of the products that you will recommend]
+  
+`
+        };
+    }
+};
 
 export const conversationsHistory = new Map();
 
 export const fetchResponse = async (question, id) => {
     addNewConversationToHistory(conversationsHistory, question, id);
-    const message = [getSystemMessage(), ...conversationsHistory.get(id)];
 
+    const catelog = await productCatelog();
+    const systemPrompt = getSystemMessage(catelog);
+
+    const message = [systemPrompt, ...conversationsHistory.get(id)];
+    console.log(message);
     try {
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -30,6 +62,7 @@ export const fetchResponse = async (question, id) => {
         const answer = completion.data.choices[0].message;
         addNewConversationToHistory(conversationsHistory, answer, id);
 
+        console.log(answer);
         return answer;
     } catch (err) {
         console.log(err);
