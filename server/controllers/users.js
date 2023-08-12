@@ -47,9 +47,7 @@ export const login = async (req, res, next) => {
     if (isMatch) {
         req.session.userId = user._id;
         // sending jwt token that will be stored in local storage in front end
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "2h"
-        });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         return res
             .status(200)
             .json({ message: "User logged in successfully!", auth: token });
