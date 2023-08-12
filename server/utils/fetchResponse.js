@@ -36,9 +36,8 @@ The data is provided below following the header format -
 ${data}
 
 You will have to provide the response strictly in JSON format which will have the following properties - 
-response: "Your response",
+response: "your response wrapped in HTML (adding styling wherever required)",
 product_ids: [This will contain the ids of the products that you will recommend]
-  
 `
         };
     }
@@ -62,7 +61,7 @@ export const fetchResponse = async (question, id) => {
         const answer = completion.data.choices[0].message;
         addNewConversationToHistory(conversationsHistory, answer, id);
 
-        console.log(answer);
+        console.log(JSON.parse(answer.content).response);
         return answer;
     } catch (err) {
         console.log(err);
