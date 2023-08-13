@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import * as api from "../../api/conversation";
 import { productsData } from "../../data/products.json";
 import ProductCatalog from "../productcatalog/ProductCatalog";
@@ -42,10 +42,12 @@ const ChatSection = () => {
     };
 
     // Add a new user message to the chat messages
-    const addNewMessage = (message: string) => setMessages(prevMessages => [...prevMessages, message]);
+    const addNewMessage = (message: string) =>
+        setMessages((prevMessages) => [...prevMessages, message]);
 
     // Remove the last message from the chat messages
-    const removeLastMessage = () => setMessages(prevMessages => prevMessages.slice(0, -1));
+    const removeLastMessage = () =>
+        setMessages((prevMessages) => prevMessages.slice(0, -1));
 
     // Handle sending user input and receiving chatbot response
     const sendMessage = async () => {
@@ -113,14 +115,16 @@ const ChatSection = () => {
                     {messages.map((message, index) => (
                         <div
                             key={index}
-                            className={`mb-2 ${index % 2 === 0 ? "text-right" : "text-left"
-                                }`}
+                            className={`mb-2 ${
+                                index % 2 === 0 ? "text-right" : "text-left"
+                            }`}
                         >
                             <div
-                                className={`inline-block p-2 rounded-lg ${index % 2 === 0
+                                className={`inline-block p-2 rounded-lg ${
+                                    index % 2 === 0
                                         ? "bg-blue-500 text-white"
                                         : "bg-gray-300 text-black"
-                                    }`}
+                                }`}
                             >
                                 {index % 2 === 0 && <div>{message}</div>}
                                 {index % 2 !== 0 && (
@@ -191,5 +195,5 @@ const ChatSection = () => {
             </div>
         </div>
     );
-}
+};
 export default ChatSection;

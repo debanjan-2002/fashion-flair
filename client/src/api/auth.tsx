@@ -8,18 +8,15 @@ import { LoginData, RegisterData } from "../interfaces/user";
  * @return {*} api response
  */
 const RegisterUser = async (userData: RegisterData): Promise<any> => {
-    console.log(userData)
-    const response = await fetch(
-        "http://localhost:3000/api/users/register",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-        }
-    );
-    if (!response.ok) throw new Error ("API Error: Register user");
+    console.log(userData);
+    const response = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error("API Error: Register user");
     const data = await response.json();
     return data;
 };
@@ -31,19 +28,15 @@ const RegisterUser = async (userData: RegisterData): Promise<any> => {
  * @return {*} api response
  */
 const LoginUser = async (userData: LoginData): Promise<any> => {
-
-    const response = await fetch(
-        "http://localhost:3000/api/users/login",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-        }
-    );
-    if (!response.ok) throw new Error ("API Error: Login user");
-    const data = await response.json();    
+    const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error("API Error: Login user");
+    const data = await response.json();
     return data;
 };
 

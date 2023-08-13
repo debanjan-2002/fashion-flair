@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 function Header() {
-    const { loggedIn } = useAuth();
+    const { loggedIn, setLoggedIn } = useAuth();
     const [showDropdown, setShowDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,79 +28,100 @@ function Header() {
         };
     }, []);
 
+    // to logout and redirect to the url
+    const handleLogout = () => {
+        localStorage.removeItem("auth");
+        setLoggedIn(false);
+        window.location.href = "/";
+    };
+
     return (
-        <header className="bg-blue-500 py-4">
-            <div className="container mx-auto flex justify-between items-center">
-                <div className="flex items-center">
+        <header className="py-4 flex absolute w-screen bg-white z-10">
+            <div className="container mx-auto flex items-center justify-between">
+                <a href="/" className="flex items-center mx-4 flex-1">
                     <img
-                        src="/logo.png" // Replace with your logo URL
+                        src="/logo-big.png" // Replace with your logo URL
                         alt="Fashion Flair Logo"
-                        className="h-8 w-8 mr-2"
+                        className="w-56 mr-2"
                     />
-                    <span className="text-white text-lg font-bold">
-                        Fashion Flair
-                    </span>
-                </div>
-                <div className="flex items-center">
-                    <ul className="flex items-center">
-                        <li className="mr-4">
-                            {loggedIn ? (
-                                <></>
-                            ) : (
-                                <div
-                                    className="dropdown relative"
-                                    ref={dropdownRef}
-                                >
+                </a>
+
+                <ul className="flex items-center font-medium text-xl flex-1">
+                    <li className="mx-3">
+                        <NavLink
+                            className="border-b-4 py-3 border-pink-400"
+                            to="/about-us"
+                        >
+                            About Us
+                        </NavLink>
+                    </li>
+                    <li className="mx-3">
+                        <NavLink to="/how-to-use">How to Use</NavLink>
+                    </li>
+                    <li className="mx-3">
+                        <NavLink to="/chat">Start Chatting</NavLink>
+                    </li>
+                </ul>
+                <div className="flex items-center flex-1 justify-end">
+                    {loggedIn ? (
+                        <div
+                            className="dropdown relative"
+                            ref={dropdownRef}
+                        >
+                            <figure
+                                className="rounded-full h-12 border-2 border-pink-800 drop-shadow-lg"
+                                onClick={handleDropdownToggle}
+                            >
+                                <img
+                                    src="/user.png"
+                                    alt=""
+                                    className="h-full"
+                                />
+                            </figure>
+                            {showDropdown && (
+                                <div className="dropdown-content absolute bg-white drop-shadow-lg rounded mt-2 -right-0 w-48 transition-all border-pink-400 border-2">
                                     <button
-                                        className="text-white font-medium focus:outline-none"
-                                        onClick={handleDropdownToggle}
+                                        className="focus:outline-none py-2 px-4 hover:bg-pink-50"
+                                        onClick={handleLogout}
                                     >
-                                        Login/Register
+                                        Logout
                                     </button>
-                                    {showDropdown && (
-                                        <div className="dropdown-content absolute bg-white rounded mt-2">
-                                            <NavLink
-                                                to="/login"
-                                                className="block py-2 px-4 hover:bg-gray-100"
-                                            >
-                                                Login
-                                            </NavLink>
-                                            <NavLink
-                                                to="/register"
-                                                className="block py-2 px-4 hover:bg-gray-100"
-                                            >
-                                                Register
-                                            </NavLink>
-                                        </div>
-                                    )}
                                 </div>
                             )}
-                        </li>
-                        <li className="mr-4">
-                            <NavLink
-                                to="/about-us"
-                                className="text-white hover:underline"
+                        </div>
+                    ) : (
+                        <div
+                            className="dropdown relative"
+                            ref={dropdownRef}
+                        >
+                            <figure
+                                className="rounded-full h-12 border-2 border-pink-800 drop-shadow-lg"
+                                onClick={handleDropdownToggle}
                             >
-                                About Us
-                            </NavLink>
-                        </li>
-                        <li className="mr-4">
-                            <NavLink
-                                to="/how-to-use"
-                                className="text-white hover:underline"
-                            >
-                                How to Use?
-                            </NavLink>
-                        </li>
-                        <li className="mr-4">
-                            <NavLink
-                                to="/chat"
-                                className="text-white hover:underline"
-                            >
-                                Start Chatting
-                            </NavLink>
-                        </li>
-                    </ul>
+                                <img
+                                    src="/user.png"
+                                    alt=""
+                                    className="h-full"
+                                />
+                            </figure>
+                            {showDropdown && (
+                                <div className="dropdown-content absolute bg-white drop-shadow-lg rounded mt-2 -right-0 w-48 transition-all border-pink-400 border-2">
+                                    <NavLink
+                                        to="/login"
+                                        className="block py-2 px-4 hover:bg-pink-50"
+                                    >
+                                        Login
+                                    </NavLink>
+                                    <NavLink
+                                        to="/register"
+                                        className="block py-2 px-4 hover:bg-pink-50"
+                                    >
+                                        Register
+                                    </NavLink>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </header>

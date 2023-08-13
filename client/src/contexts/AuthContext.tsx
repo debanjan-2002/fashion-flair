@@ -10,9 +10,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Create an AuthProvider component to manage authentication state
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+    children,
+}) => {
     // Initialize the logged-in state based on localStorage
-    const [loggedIn, setLoggedIn] = useState(localStorage.getItem("auth") !== null);
+    const [loggedIn, setLoggedIn] = useState(
+        localStorage.getItem("auth") !== null
+    );
 
     // Provide the authentication context to the app
     return (

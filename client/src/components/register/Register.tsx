@@ -20,9 +20,9 @@ const Register: React.FC = () => {
         };
 
         try {
-            console.log('checkpoint 1')
+            console.log("checkpoint 1");
             await api.RegisterUser(userData);
-            console.log('checkpoint 2')
+            console.log("checkpoint 2");
             navigate("/login");
         } catch (error) {
             console.error("Error:", error);
