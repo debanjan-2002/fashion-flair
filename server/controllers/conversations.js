@@ -48,11 +48,14 @@ export const addConversations = async (req, res, next) => {
     // saving the updated user
     await user.save();
 
-    const temp = JSON.parse(response.content);
-    const product_ids = temp.product_ids;
-    const products = await Product.find({ _id: { $in: product_ids } });
-
-    res.status(200).json({ message: temp.response, products });
+    try {
+        const temp = JSON.parse(response.content);
+        const product_ids = temp.product_ids;
+        const products = await Product.find({ _id: { $in: product_ids } });
+        res.status(200).json({ message: temp.response, products });
+    } catch (err) {
+        res.status(200).json({ message: response.content, products: [] });
+    }
 };
 
 export const deleteConversations = async (req, res, next) => {
