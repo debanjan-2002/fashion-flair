@@ -34,28 +34,7 @@ const addDummyConversations = async userId => {
 
 const addDummyProducts = async () => {
     // await Product.deleteMany({});
-    const product = new Product({
-        name: "Winter Knit Beanie",
-        brand: "WarmCozy",
-        category: "Accessories",
-        description: "Warm and stylish knit beanie for cold winter days.",
-        price: 19.95,
-        color: "Blue",
-        gender: "Unisex",
-        season: "Winter",
-        tags: ["beanie", "knit hat", "winter accessories"],
-        images: [
-            {
-                url: "https://example.com/beanie_front.jpg",
-                alt_text: "Front View"
-            },
-            {
-                url: "https://example.com/beanie_side.jpg",
-                alt_text: "Side View"
-            }
-        ],
-        rating: 7.0
-    });
+    const product = new Product({});
     await product.save();
 };
 
