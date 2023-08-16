@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as api from "../../api/conversation";
 import "./ChatSection.css";
-import { productsData } from "../../data/products.json";
 import ProductCatalog from "../productcatalog/ProductCatalog";
+import isJson from "../../utils/isJson";
+import { Product } from "../productcatalog/ProductCatalog";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 const ChatSection = () => {
     const [userInput, setUserInput] = useState("");
@@ -10,6 +12,13 @@ const ChatSection = () => {
     const [errorMessage, setErrorMessage] = useState(false);
     const [chatbotReply, setChatbotReply] = useState<string>("");
     const [showProductCatalog, setShowProductCatalog] = useState(false);
+    const [productsData, setProductsData] = useState<Product[]>([]);
+    // const [isMicOn, setMicOn] = useState(false);
+    // const { transcript  , resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+
+    // if(browserSupportsSpeechRecognition){
+    //     console.log("hello")
+    // }
 
     const chatBoxRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +44,19 @@ const ChatSection = () => {
         };
         fetchConversation();
     }, []);
+
+    // Record Voice and change to Text
+    const voiceToText = () => {
+    //     if(!isMicOn){
+    //     setMicOn(true);  
+    //     SpeechRecognition.startListening();
+    //     }
+    //     else{
+    //     setMicOn(false);  
+    //     setUserInput(userInput + " " + transcript);
+    //     SpeechRecognition.stopListening();
+    //     }
+    }
 
     // Handle changes when the user types in the input field
     const handleUserTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,11 +101,27 @@ const ChatSection = () => {
             const data = await api.AddConversation(query, "user");
             // Update chatbot's reply message
             setChatbotReply(data.message);
+            const productsArray = data.products.map(
+                (product:any) => {
+                    return {
+                        id : product._id,
+                        imageSrc : product.images[0].url,
+                        productName: product.name,
+                        price: product.price,
+                    }
+                }
+            )
+            // Update the products data
+            setProductsData(productsArray);
+            
             // Remove the "Chatbot is typing..." message and add the chatbot's actual reply
             removeLastMessage();
             addNewMessage(data.message);
             // Show the product catalog if needed
             setShowProductCatalog(true);
+
+            //clear the transcript
+            // resetTranscript();
         } catch (error) {
             console.error(error);
         }
@@ -170,7 +208,8 @@ const ChatSection = () => {
                                             <div
                                                 className="my-2"
                                                 dangerouslySetInnerHTML={{
-                                                    __html: message,
+                                                
+                                                    __html: (isJson(message))? JSON.parse(message).response : message,
                                                 }}
                                             />
                                         )}
@@ -185,7 +224,7 @@ const ChatSection = () => {
                         </div>
                     </div>
                     <div className="chatbox flex flex-row justify-between items-center gap-2 absolute bottom-10 w-full px-6 py-2 border-2 border-amber-400 rounded-2xl">
-                        <button className="text-zinc-500 font-medium p-2 rounded-lg cursor-pointer hover:text-zinc-800 border-2 border-transparent transition-all ease-in-out">
+                        <button className="text-zinc-500 font-medium p-2 rounded-lg cursor-pointer hover:text-zinc-800 border-2 border-transparent transition-all ease-in-out" onClick={voiceToText}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"

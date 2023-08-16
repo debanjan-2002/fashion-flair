@@ -14,6 +14,7 @@ const AddConversation = async (
             role,
         }),
     });
+    console.log(response)
     if (!response.ok) throw new Error("API Error: Add conversation");
     const data = await response.json();
     return data;

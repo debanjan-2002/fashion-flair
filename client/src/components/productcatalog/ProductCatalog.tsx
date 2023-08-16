@@ -35,3 +35,4 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({ products }) => {
 };
 
 export default ProductCatalog;
+export type {Product};

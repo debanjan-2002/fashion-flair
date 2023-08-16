@@ -17,7 +17,6 @@ let catelog = ``;
 const productCatelog = async () => {
     if (!catelog) {
         const products = await Product.find({});
-        console.log(products);
         catelog = formatData(products);
     }
     return catelog;
