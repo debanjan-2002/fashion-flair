@@ -1,144 +1,136 @@
 import React from "react";
-import "./About.css"
+import "./About.css";
 import Header from "../../components/layout/header/Header";
+import SlideIn from "../../components/slideIn/SlideIn";
+import { Fade } from "react-awesome-reveal";
+import Footer from "../../components/layout/footer/Footer";
+import { testimonials } from "../../data/testimonials.json";
+import Testimonial from "../../components/testimonial/Testimonial";
+import Carousel from "nuka-carousel";
 
 const About: React.FC = () => {
+    const carouselConfig = {
+        nextDisabled: true,
+        prevDisabled: true,
+    };
     return (
         <>
-            <Header/>
-
-            <section
-                style={{ backgroundImage: "url('/bg/bg-wide.jpg')" }}
-                className="bg-local bg-center bg-no-repeat bg-cover relative"
-            >
-                <img
-                    src="/bg/bot-1.png"
-                    alt=""
-                    className="absolute motion-safe:animate-bounce leftBot"
-                />
-                <img
-                    src="/bg/bot-2.png"
-                    alt=""
-                    className="absolute motion-safe:animate-bounce rightBot"
-                />
-                <img
-                    src="/bg/dog.png"
-                    alt=""
-                    className="dog absolute dogIllustration"
-                />
-                <img
-                    src="/bg/girl.png"
-                    alt=""
-                    className="girl absolute girlIllustration"
-                />
-                <img
-                    src="/bg/guitar.png"
-                    alt=""
-                    className="guitar absolute guitarIllustration"
-                />
-                <img
-                    src="/bg/skates.png"
-                    alt=""
-                    className="skates absolute skateIllustration"
-                />
-                <div className="container py-6 flex mx-auto items-center text-center justify-center min-h-screen">
-                    <div className="flex flex-col items-center relative -top-20">
-                        <h1 className="text-6xl font-bold my-6">
-                            Welcome to Fashion Flair
-                        </h1>
-                        <p className="max-w-4xl mb-6 text-xl">
-                            At Fashion Flair, we believe that fashion is more
-                            than just clothing, it's an expression of your
-                            personality and a way to showcase your unique style.
-                            Our app is designed to empower you with the latest
-                            fashion trends, AI-driven outfit suggestions, and a
-                            curated collection of top-quality clothing,
-                            accessories, and footwear.
-                        </p>
-                        <a className="px-8 py-4 font-semibold border-2 border-amber-400 hover:border-pink-400 ease-in-out duration-300 hover:bg-pink-400 hover:text-white text-black rounded-full text-xl cursor-pointer drop-shadow-xl">
-                            Start Chatting
-                        </a>
+            <Header />
+            <section className="mt-16 bg-rose-100 py-24 px-6">
+                <div className="container flex items-center gap-4 justify-between mx-auto">
+                    <div className="my-4 basis-1/2">
+                        <SlideIn delay={400}>
+                            <h1 className="font-extrabold text-5xl max-w-xl mb-6">
+                                Elevating Fashion Discovery: Where AI Meets Your
+                                Style
+                            </h1>
+                            <p className="text-xl max-w-2xl">
+                                Gone are the days of endless scrolling; with
+                                Fashion Flair, style is at your fingertips. It's
+                                time to step into a realm where innovation and
+                                style converge, where AI becomes your personal
+                                stylist!
+                            </p>
+                        </SlideIn>
+                    </div>
+                    <div className="p-4 basis-1/2 flex items-center justify-center gap-4">
+                        <Fade
+                            delay={400}
+                            duration={1000}
+                            triggerOnce
+                            cascade
+                            damping={0.2}
+                        >
+                            <img
+                                src="/bg/girl.png"
+                                alt=""
+                                className="max-h-80 w-auto"
+                            />
+                            <img
+                                src="/bg/bot-1.png"
+                                alt=""
+                                className="max-h-80 w-auto"
+                            />
+                        </Fade>
+                    </div>
+                </div>
+            </section>
+            <section className="py-24">
+                <div className="container flex items-center gap-4 justify-between mx-auto">
+                    <div className="basis-1/2 my-4 p-4">
+                        <SlideIn delay={400}>
+                            <img
+                                src="/discover.png"
+                                alt=""
+                                className="max-w-lg w-full h-auto mx-auto"
+                            />
+                        </SlideIn>
+                    </div>
+                    <div className="my-4 basis-1/2 p-4">
+                        <SlideIn delay={400}>
+                            <h2 className="font-extrabold text-4xl max-w-xl mb-6 text-pink-400">
+                                What is Fashion Flair?
+                            </h2>
+                            <p>
+                                We are not a mission solely bound to code and
+                                algorithms, we are a journey of style
+                                exploration. Welcome to Fashion Flair, a
+                                platform where fashion converges with AI to
+                                create a unique realm of personalized
+                                recommendations. Our virtual artificial
+                                assistant is more than just lines of code - it's
+                                your trusted guide through the vast landscape of
+                                fashion possibilities. Just like a fashion-savvy
+                                friend, Fashion Flair delves into your
+                                preferences, past interactions, and style
+                                aspirations to curate suggestions that align
+                                with your taste. Embark on a journey that
+                                transcends the ordinary, as we redefine the way
+                                you discover, experiment, and embrace fashion.
+                                <br />
+                                <br />
+                                Envision a world where dressing up becomes an
+                                art, and every outfit is a canvas waiting to be
+                                painted with your distinct style. Fashion
+                                Flair's capabilities are boundless - from
+                                suggesting outfits for special occasions to
+                                helping you stay ahead of the latest trends,
+                                it's a tool that elevates your relationship with
+                                fashion. Beyond trends, beyond fashion seasons,
+                                Fashion Flair becomes your steadfast companion,
+                                helping you curate a wardrobe that reflects your
+                                individuality. Welcome to a realm where fashion
+                                isn't just about what you wear; it's about how
+                                you express yourself to the world.
+                            </p>
+                        </SlideIn>
                     </div>
                 </div>
             </section>
 
             <section className="bg-white py-12">
-                <div className="container py-6 mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="md:order-1 mb-4">
-                            <div className="border-4 border-yellow-400 p-4 rounded-2xl max-w-xl mx-auto">
-                                <img
-                                    src="/samples/img-1.png"
-                                    alt="AI-Powered Style Assistant"
-                                    className="rounded mx-auto"
-                                />
-                            </div>
-                        </div>
-                        <div className="md:order-2 mb-4 flex items-center">
-                            <div className="max-w-lg mx-auto">
-                                <h2 className="text-6xl  font-black mb-8 text-yellow-400">
-                                    AI-Powered Style Assistant
-                                </h2>
-                                <p className="text-gray-700 mb-4 text-xl text-justify">
-                                    Our AI-powered chatbot isn't just a virtual
-                                    assistant; it's your personal stylist available
-                                    24/7. Whether you're seeking advice on the
-                                    latest trends, planning an outfit for an event,
-                                    or experimenting with new looks, our chatbot is
-                                    here to guide you.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:order-4 mb-4">
-                            <div className="border-4 border-pink-400 p-4 rounded-2xl max-w-xl mx-auto">
-                                <img
-                                    src="/samples/img-2.png"
-                                    alt="Curated Fashion Catalog"
-                                    className="rounded mx-auto"
-                                />
-                            </div>
-                        </div>
-                        <div className="md:order-3 mb-4 flex items-center">
-                            <div className="max-w-lg mx-auto">
-                                <h2 className="text-6xl  font-black mb-8 text-pink-400">
-                                    Curated Fashion Catalog
-                                </h2>
-                                <p className="text-gray-700 mb-4 text-xl text-justify">
-                                    Discover a world of style in our carefully
-                                    curated fashion catalog. We've partnered with
-                                    renowned designers and brands to bring you a
-                                    diverse collection of clothing and accessories
-                                    that cater to various tastes and occasions.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="md:order-5 mb-4">
-                            <div className="border-4 border-teal-400 p-4 rounded-2xl max-w-xl mx-auto">
-                                <img
-                                    src="/samples/img-3.png"
-                                    alt="Unleash Your Creativity"
-                                    className="rounded mx-auto"
-                                />
-                            </div>
-                        </div>
-                        <div className="md:order-6 mb-4 flex items-center">
-                            <div className="max-w-lg mx-auto">
-                                <h2 className="text-6xl  font-black mb-8 text-teal-400">
-                                Unleash Your Creativity
-                                </h2>
-                                <p className="text-gray-700 mb-4 text-xl text-justify">
-                                    Fashion is all about expressing your
-                                    individuality, and we're here to help you
-                                    unleash your creativity. Our AI-powered outfit
-                                    generator takes the guesswork out of styling and
-                                    empowers you to experiment with different
-                                    combinations and looks.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                <h1 className="font-extrabold text-5xl text-center mb-12">
+                    What experts say about this technology
+                </h1>
+                <div className="container mx-auto">
+                    <Carousel
+                        autoplay
+                        withoutControls
+                        wrapAround
+                        className="border-4 border-pink-400 max-w-6xl px-6 py-12 rounded-xl mx-auto mb-12"
+                    >
+                        {testimonials.map((testimonial) => (
+                            <Testimonial
+                                image={testimonial.image}
+                                testimony={testimonial.testimony}
+                                author={testimonial.author}
+                                authorInfo={testimonial.authorInfo}
+                            />
+                        ))}
+                    </Carousel>
                 </div>
             </section>
+            <Footer />
         </>
     );
 };

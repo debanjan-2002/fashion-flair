@@ -64,10 +64,7 @@ function Header() {
                 </ul>
                 <div className="flex items-center flex-1 justify-end">
                     {loggedIn ? (
-                        <div
-                            className="dropdown relative"
-                            ref={dropdownRef}
-                        >
+                        <div className="dropdown relative" ref={dropdownRef}>
                             <figure
                                 className="rounded-full h-12 border-2 border-pink-800 drop-shadow-lg"
                                 onClick={handleDropdownToggle}
@@ -90,10 +87,7 @@ function Header() {
                             )}
                         </div>
                     ) : (
-                        <div
-                            className="dropdown relative"
-                            ref={dropdownRef}
-                        >
+                        <div className="dropdown relative" ref={dropdownRef}>
                             <figure
                                 className="rounded-full h-12 border-2 border-pink-800 drop-shadow-lg"
                                 onClick={handleDropdownToggle}
