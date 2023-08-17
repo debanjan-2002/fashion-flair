@@ -4,16 +4,20 @@ import Product from "./products.js";
 
 const { Schema } = mongoose;
 
-const eventSchema = new Schema({
-    event_type: {
-        type: String,
-        required: true
+const eventSchema = new Schema(
+    {
+        event_type: {
+            type: String,
+            required: true
+        },
+        product_id: {
+            type: Schema.Types.ObjectId,
+            ref: "Product",
+            required: true
+        }
     },
-    event_time: [{ type: Date, required: true }],
-    product_ids: [
-        { type: Schema.Types.ObjectId, ref: "Product", required: true }
-    ]
-});
+    { timestamps: true }
+);
 
 const userSchema = new Schema({
     email: {
