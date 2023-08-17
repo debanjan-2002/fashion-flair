@@ -1,0 +1,22 @@
+{
+    "testimonials": [
+        {
+            "image": "/testimonials/author-1.webp",
+            "testimony": "There are immediate use cases for the technology to improve efficiency across design, marketing, logistics, supply chain and store operations. Fashion must improve its knowledge, skill sets, understanding and application of these technologies to deliver more sustainable business models.",
+            "author": "Matthew Drinkwater",
+            "authorInfo": "Head of London College of Fashion's Fashion Innovation Agency"
+        },
+        {
+            "image": "/testimonials/author-2.webp",
+            "testimony": "It's not like the computer is designing and replacing jobs. It's a different type of creator that's using different types of technologies to create different types of outputs that can be produced physically. It's a fresh perspective.",
+            "author": "Michael Mente",
+            "authorInfo": "Revolve CEO and Co-Founder."
+        },
+        {
+            "image": "/testimonials/author-3.webp",
+            "testimony": "AI could add $150 to $275 billion to the operating profits of the fashion and luxury sectors within the next three to five years. These are early days, but we do see a very high potential fashion",
+            "author": "Holger Harreis",
+            "authorInfo": "Senior partner, McKinsey"
+        }
+    ]
+}

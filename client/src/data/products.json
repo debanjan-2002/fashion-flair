@@ -1,0 +1,16 @@
+{
+    "productsData": [
+        {
+            "id": 1,
+            "imageSrc": "/samples/product-1.png",
+            "productName": "Product 1",
+            "price": "$49.99"
+        },
+        {
+            "id": 2,
+            "imageSrc": "/samples/product-2.png",
+            "productName": "Product 2",
+            "price": "$29.99"
+        }
+    ]
+}

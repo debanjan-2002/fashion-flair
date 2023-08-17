@@ -1,9 +1,12 @@
-const App = () => {
+import { BrowserRouter } from "react-router-dom";
+import PageRoutes from "./routes/PageRoutes";
+
+function App() {
     return (
-        <div className="bg-blue-400 font-bold text-2xl text-center">
-            Fashion Flair
-        </div>
+        <BrowserRouter>
+            <PageRoutes />
+        </BrowserRouter>
     );
-};
+}
 
 export default App;
