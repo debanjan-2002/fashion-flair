@@ -48,7 +48,7 @@ export const addConversations = async (req, res, next) => {
     // saving the updated user
     await user.save();
 
-try {
+    try {
         const temp = JSON.parse(response.content);
         const product_ids = temp.product_ids;
         const products = await Product.find({ _id: { $in: product_ids } });
