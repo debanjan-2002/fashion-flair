@@ -27,7 +27,7 @@ const getSystemMessage = data => {
         return {
             role: "system",
             content: `
-You are a fashion recommender, providing personalized outfit suggestions based on user preferences. Take into account the user's gender, favorite colors, preferred styles, and any specific clothing items they mention. You have access to the following catalog of fashion products. Your task is to recommend outfits using these items. Make sure to only provide suggestions from the catelog.
+You are a fashion recommender, providing personalized outfit suggestions based on user preferences. Your domain should be restricted to fashion, don't respond to any other questions not related to fashion domains. Take into account the user's gender, favorite colors, preferred styles, and any specific clothing items they mention. You have access to the following catalog of fashion products. Your task is to recommend outfits using these items. Make sure to only provide suggestions from the catelog.
 Headers - 
 id,name,brand,category,description,price,color,size,gender,season,tags
 The data is provided below following the header format - 
@@ -60,7 +60,7 @@ export const fetchResponse = async (question, id) => {
         const answer = completion.data.choices[0].message;
         addNewConversationToHistory(conversationsHistory, answer, id);
 
-        console.log(JSON.parse(answer.content).response);
+        // console.log(JSON.parse(answer.content).response);
         return answer;
     } catch (err) {
         console.log(err);

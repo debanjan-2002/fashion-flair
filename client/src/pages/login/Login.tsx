@@ -31,57 +31,57 @@ function Login() {
     };
 
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Header />
-            <div className="flex justify-center items-center h-screen bg-gray-100">
-                <form
-                    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-                    onSubmit={handleLogin}
-                >
-                    <div className="mb-4">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="email"
-                        >
-                            Email
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email"
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="password"
-                        >
-                            Password
-                        </label>
-                        <input
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="password"
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="flex items-center justify-between">
+            <div
+                className="flex flex-col items-center justify-center flex-1 bg-cover bg-center"
+                style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/login-bg.png)" }}
+            >
+                <div className="flex flex-col bg-white bg-opacity-40 backdrop-blur-lg rounded-xl p-12 w-96 space-y-6 relative shadow-md border border-pink-600">
+                    <a
+                        href="/register"
+                        className="text-right text-pink-600  p-8 hover:underline text-xs"
+                        style={{ position: "absolute", top: "0", right: "0" }}
+                    >
+                        Not registered? Register here
+                    </a>
+                    <h2 className="text-2xl font-semibold mb-4 text-black">
+                        Log In
+                    </h2>
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div className="space-y-2">
+                            <label className="text-sm border-pink-600 text-zinc-800 block">
+                                Email
+                            </label>
+                            <input
+                                className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-700 block">
+                                Password
+                            </label>
+                            <input
+                                className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit"
+                            className={`py-3 px-6 text-lg text-white font-semibold rounded-full bg-pink-400 hover:scale-105 transition duration-500 shadow-lg`}
                         >
                             Login
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
             <Footer />
-        </>
+        </div>
     );
 }
 

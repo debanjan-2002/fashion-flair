@@ -18,7 +18,7 @@ const ProductCatalog: React.FC<ProductCatalogProps> = ({ products }) => {
             {products.map((product) => (
                 <div
                     key={product.id}
-                    className="w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-4"
+                    className="px-4 mb-4 py-8"
                 >
                     <ProductCard
                         imageSrc={product.imageSrc}

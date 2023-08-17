@@ -13,12 +13,13 @@ const ChatSection = () => {
     const [chatbotReply, setChatbotReply] = useState<string>("");
     const [showProductCatalog, setShowProductCatalog] = useState(false);
     const [productsData, setProductsData] = useState<Product[]>([]);
-    // const [isMicOn, setMicOn] = useState(false);
-    // const { transcript  , resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+    const [currentMessage, setCurrentMessage] = useState('');
+    const [isMicOn, setMicOn] = useState(false);
+    const { transcript  , resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
-    // if(browserSupportsSpeechRecognition){
-    //     console.log("hello")
-    // }
+    if(browserSupportsSpeechRecognition){
+        return <span>Browser doesn't support speech recognition.</span>;
+    }
 
     const chatBoxRef = useRef<HTMLDivElement>(null);
 
@@ -47,15 +48,15 @@ const ChatSection = () => {
 
     // Record Voice and change to Text
     const voiceToText = () => {
-    //     if(!isMicOn){
-    //     setMicOn(true);  
-    //     SpeechRecognition.startListening();
-    //     }
-    //     else{
-    //     setMicOn(false);  
-    //     setUserInput(userInput + " " + transcript);
-    //     SpeechRecognition.stopListening();
-    //     }
+            if(!isMicOn){
+            setMicOn(true);  
+            SpeechRecognition.startListening({ continuous: true });
+            }
+            else{
+            setMicOn(false);  
+            setUserInput(userInput + " " + transcript);
+            SpeechRecognition.stopListening();
+            }
     }
 
     // Handle changes when the user types in the input field
@@ -63,6 +64,14 @@ const ChatSection = () => {
         setUserInput(e.target.value);
         setShowProductCatalog(false);
     };
+
+    // Handle Key press
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            //   e.preventDefault();
+            sendMessage();
+        }
+    }
 
     // Add a new user message to the chat messages
     const addNewMessage = (message: string) =>
@@ -74,6 +83,7 @@ const ChatSection = () => {
 
     // Handle sending user input and receiving chatbot response
     const sendMessage = async () => {
+        // e.preventDefault();
         if (userInput.trim() !== "") {
             setErrorMessage(false);
             // Add the user's message to the chat
@@ -102,10 +112,10 @@ const ChatSection = () => {
             // Update chatbot's reply message
             setChatbotReply(data.message);
             const productsArray = data.products.map(
-                (product:any) => {
+                (product: any) => {
                     return {
-                        id : product._id,
-                        imageSrc : product.images[0].url,
+                        id: product._id,
+                        imageSrc: product.images[0].url,
                         productName: product.name,
                         price: product.price,
                     }
@@ -113,7 +123,7 @@ const ChatSection = () => {
             )
             // Update the products data
             setProductsData(productsArray);
-            
+
             // Remove the "Chatbot is typing..." message and add the chatbot's actual reply
             removeLastMessage();
             addNewMessage(data.message);
@@ -188,28 +198,25 @@ const ChatSection = () => {
                             {messages.map((message, index) => (
                                 <div
                                     key={index}
-                                    className={`mb-2 ${
-                                        index % 2 === 0
+                                    className={`mb-2 ${index % 2 === 0
                                             ? "text-right"
                                             : "text-left"
-                                    }`}
+                                        }`}
                                 >
                                     <div
-                                        className={`inline-block py-2 px-4 rounded-lg ${
-                                            index % 2 === 0
+                                        className={`inline-block py-2 px-4 rounded-lg ${index % 2 === 0
                                                 ? "bg-white shadow-lg text-black"
                                                 : "bg-white shadow-lg text-black"
-                                        }`}
+                                            }`}
                                     >
                                         {index % 2 === 0 && (
                                             <div>{message}</div>
                                         )}
                                         {index % 2 !== 0 && (
                                             <div
-                                                className="my-2"
+                                                className="my-2 whitespace-pre-line"
                                                 dangerouslySetInnerHTML={{
-                                                
-                                                    __html: (isJson(message))? JSON.parse(message).response : message,
+                                                    __html: (isJson(message)) ? JSON.parse(message).response : message,
                                                 }}
                                             />
                                         )}
@@ -251,6 +258,7 @@ const ChatSection = () => {
                             className="bg-transparent py-2 px-6 placeholder-zinc-500 font-medium focus:outline-none rounded-md hover:placeholder-zinc-800 grow rounded-lg"
                             placeholder="Start typing..."
                             onChange={(evt) => handleUserTyping(evt)}
+                            onKeyDown={handleKeyPress}
                             value={userInput}
                         />
                         <button
