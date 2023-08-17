@@ -38,7 +38,7 @@ const productSchema = new Schema({
     },
     season: {
         type: String,
-        enum: ["Summer", "Winter"]
+        enum: ["Summer", "Winter", "All"]
     },
     tags: [String],
     images: [{ url: String, alt_text: String }],

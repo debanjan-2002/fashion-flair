@@ -17,6 +17,7 @@ let catelog = ``;
 const productCatelog = async () => {
     if (!catelog) {
         const products = await Product.find({});
+        // console.log(products);
         catelog = formatData(products);
     }
     return catelog;
@@ -30,8 +31,6 @@ const getSystemMessage = data => {
 You are a fashion recommender, providing personalized outfit suggestions based on user preferences. Your domain should be restricted to fashion, don't respond to any other questions not related to fashion domains. Take into account the user's gender, favorite colors, preferred styles, and any specific clothing items they mention. You have access to the following catalog of fashion products. Your task is to recommend outfits using these items. Make sure to only provide suggestions from the catelog.
 Headers - 
 id,name,brand,category,description,price,color,size,gender,season,tags
-The data is provided below following the header format - 
-
 ${data}
 
 You will have to provide the response strictly in JSON format which will have the following properties - 
@@ -51,7 +50,7 @@ export const fetchResponse = async (question, id) => {
     const systemPrompt = getSystemMessage(catelog);
 
     const message = [systemPrompt, ...conversationsHistory.get(id)];
-    console.log(message);
+    // console.log(message);
     try {
         const completion = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -63,6 +62,11 @@ export const fetchResponse = async (question, id) => {
         // console.log(JSON.parse(answer.content).response);
         return answer;
     } catch (err) {
-        console.log(err);
+        // console.log(err);
+        return {
+            role: "assistant",
+            content:
+                "Sorry! Something went wrong... Try after sometime or terminate the session."
+        };
     }
 };
