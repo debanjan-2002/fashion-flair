@@ -45,7 +45,7 @@ const Team: React.FC = () => {
                         email="mailto:debanjan2002@gmail.com"
                         image="/team/debanjan.jpeg"
                         description="Former SWE Intern @ Microsoft || Btech CSE 2024 @KGEC || SpeedCuber || Backend developer @FashionFlair"
-                        linkedin="https://linkedin.com/in/debanjan-2002"
+                        linkedin="https://linkedin.com/in/debanjan-poddar"
                         github="https://github.com/debanjan-2002"
                     />
                 </div>

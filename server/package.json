@@ -17,6 +17,6 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.2",
-    "openai": "^3.3.0"
+    "openai": "^4.0.0"
   }
 }

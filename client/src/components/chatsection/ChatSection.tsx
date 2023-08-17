@@ -4,6 +4,7 @@ import "./ChatSection.css";
 import ProductCatalog from "../productcatalog/ProductCatalog";
 import isJson from "../../utils/isJson";
 import { Product } from "../productcatalog/ProductCatalog";
+import 'regenerator-runtime/runtime';
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 const ChatSection = () => {
@@ -15,11 +16,11 @@ const ChatSection = () => {
     const [productsData, setProductsData] = useState<Product[]>([]);
     const [currentMessage, setCurrentMessage] = useState('');
     const [isMicOn, setMicOn] = useState(false);
-    // const { transcript  , resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+    const { transcript  , resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
-    // if(browserSupportsSpeechRecognition){
-    //     return <span>Browser doesn't support speech recognition.</span>;
-    // }
+    if(!browserSupportsSpeechRecognition){
+        return <span>Browser doesn't support speech recognition.</span>;
+    }
 
     const chatBoxRef = useRef<HTMLDivElement>(null);
 
@@ -48,16 +49,19 @@ const ChatSection = () => {
 
     // Record Voice and change to Text
     const voiceToText = () => {
-            // if(!isMicOn){
-            // setMicOn(true);  
-            // SpeechRecognition.startListening({ continuous: true });
-            // }
-            // else{
-            // setMicOn(false);  
-            // setUserInput(userInput + " " + transcript);
-            // SpeechRecognition.stopListening();
-            // }
+            if(!isMicOn){
+            setMicOn(true);  
+            resetTranscript();
+            SpeechRecognition.startListening({ continuous: true });
+            }
+            else{
+            setMicOn(false);  
+            SpeechRecognition.stopListening();
+            }
     }
+    useEffect(()=>{
+        setUserInput(transcript);
+    },[transcript]) 
 
     // Handle changes when the user types in the input field
     const handleUserTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +94,7 @@ const ChatSection = () => {
             addNewMessage(userInput);
             // Simulate chatbot's reply
             await simulateChatbotReply();
+            resetTranscript();
         } else {
             setErrorMessage(true);
         }
