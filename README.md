@@ -25,8 +25,7 @@
 
 
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
+  <h2>Table of Contents</h2>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -48,7 +47,6 @@
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
-</details>
 
 
 
@@ -248,7 +246,6 @@ Project Link: [https://github.com/debanjan-2002/fashion-flair](https://github.co
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 * [StorySet](https://storyset.com/)
 * [SlangAi](https://www.slang.ai/)
