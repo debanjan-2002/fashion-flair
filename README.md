@@ -95,7 +95,6 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Get a free OPENAI API Key at [https://openai.com/](https://openai.com/)
 2. Clone the repo
@@ -235,7 +234,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Adrishyantee Maiti - [@adrishyantee](https://linkedin.com/in/adrishyantee) - adrishyantee@gmail.com
 
-Debanjan Poddar - [@debanjan](https://linkedin.com/in/debanjanpoddar) - debanjan.edu.2002@gmail.com
+Debanjan Poddar - [@debanjan](https://linkedin.com/in/debanjan-poddar) - debanjan.edu.2002@gmail.com
 
 Project Link: [https://github.com/debanjan-2002/fashion-flair](https://github.com/debanjan-2002/fashion-flair)
 
