@@ -48,7 +48,7 @@ export const addConversations = async (req, res, next) => {
     // saving the updated user
     await user.save();
 
-try {
+    try {
         const temp = JSON.parse(response.content);
         const product_ids = temp.product_ids;
         const products = await Product.find({ _id: { $in: product_ids } });
@@ -77,6 +77,7 @@ export const deleteConversations = async (req, res, next) => {
 
     // clearing the conversation history cache
     conversationsHistory.clear();
+    conversationsHistory.set(userId, []);
 
     res.status(200).json({ message: "Conversations deleted successfully!" });
 };

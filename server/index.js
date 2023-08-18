@@ -6,6 +6,7 @@ import cors from "cors";
 
 import conversationRoutes from "./routes/conversation.js";
 import userRoutes from "./routes/user.js";
+import wishlistRoutes from "./routes/wishlist.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use(
 
 app.use("/api/users", userRoutes);
 app.use("/api/conversations", conversationRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 app.use((err, req, res, next) => {
     if (!err.statusCode) {
