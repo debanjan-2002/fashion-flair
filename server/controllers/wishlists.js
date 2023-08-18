@@ -59,5 +59,5 @@ export const deleteItemFromWishList = async (req, res, next) => {
         { new: true }
     );
 
-    return res.json({ updatedUser: user });
+    return res.json({ message: "Item deleted from wishlist successfully!" });
 };
