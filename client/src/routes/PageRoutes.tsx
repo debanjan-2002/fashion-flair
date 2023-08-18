@@ -8,6 +8,7 @@ import Login from "../pages/login/Login";
 import Chat from "../pages/chat/Chat";
 import Catalog from "../pages/catalog/Catalog";
 import FAQ from "../pages/faq/FAQ";
+import Wishlist from "../pages/wishlist/Wishlist";
 
 function PageRoutes() {
     return (
@@ -21,6 +22,7 @@ function PageRoutes() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/my-wishlist" element={<Wishlist />} />
         </Routes>
     );
 }

@@ -1,15 +1,25 @@
 import * as api from "../../api/auth";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { RegisterData } from "../../interfaces/user";
 import Header from "../../components/layout/header/Header";
 import Footer from "../../components/layout/footer/Footer";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+
+    const { loggedIn } = useAuth();
+
+    useEffect(() => {
+        if (loggedIn) {
+            console.log("logged in already.");
+            navigate("/chat");
+        }
+    }, [loggedIn]);
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,9 +32,7 @@ const Register: React.FC = () => {
         };
 
         try {
-            console.log("checkpoint 1");
             await api.RegisterUser(userData);
-            console.log("checkpoint 2");
             navigate("/login");
         } catch (error) {
             console.error("Error:", error);
@@ -32,11 +40,14 @@ const Register: React.FC = () => {
     };
 
     return (
-            <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen">
             <Header />
             <div
                 className="flex flex-col items-center justify-center flex-1 bg-cover bg-center"
-                style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/login-bg.png)" }}
+                style={{
+                    backgroundImage:
+                        "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/login-bg.png)",
+                }}
             >
                 <div className="flex flex-col bg-white bg-opacity-40 backdrop-blur-lg rounded-xl p-12 w-96 space-y-6 relative shadow-md border border-pink-600">
                     <a
