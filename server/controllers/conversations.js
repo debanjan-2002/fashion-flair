@@ -77,6 +77,7 @@ export const deleteConversations = async (req, res, next) => {
 
     // clearing the conversation history cache
     conversationsHistory.clear();
+    conversationsHistory.set(userId, []);
 
     res.status(200).json({ message: "Conversations deleted successfully!" });
 };
