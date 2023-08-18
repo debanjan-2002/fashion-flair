@@ -42,14 +42,21 @@ export const addItemToWishList = async (req, res, next) => {
 export const deleteItemFromWishList = async (req, res, next) => {
     // get the user id from session
     const { userId } = req.session;
-    // get the product id from the request body
-    const { productId } = req.body;
+    // get the product id and eventType from the request body
+    const { productId, eventType } = req.body;
 
     // find the user from database and update
     const user = await User.findByIdAndUpdate(
         userId,
-        { $pull: { events: { product_id: { $eq: productId } } } },
-        { runValidators: true, new: true }
+        {
+            $pull: {
+                events: {
+                    product_id: { $eq: productId },
+                    event_type: { $eq: eventType }
+                }
+            }
+        },
+        { new: true }
     );
 
     return res.json({ updatedUser: user });
