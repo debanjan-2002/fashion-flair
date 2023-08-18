@@ -35,7 +35,8 @@ const userSchema = new Schema({
         required: true
     },
     events: [eventSchema],
-    conversationHistory: [{ type: Schema.Types.ObjectId, ref: "Conversation" }]
+    conversationHistory: [{ type: Schema.Types.ObjectId, ref: "Conversation" }],
+    suggestedProducts: [{ type: Schema.Types.ObjectId, ref: "Product" }]
 });
 
 const User = mongoose.model("User", userSchema);
