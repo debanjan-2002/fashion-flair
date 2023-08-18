@@ -6,12 +6,17 @@ import { cacheConversations } from "../utils/cacheConversations.js";
 
 export const getConversations = async (req, res, next) => {
     const { userId } = req.session;
-    const user = await User.findById(userId).populate("conversationHistory");
+    const user = await User.findById(userId)
+        .populate("conversationHistory")
+        .populate("suggestedProducts");
 
     // On load, add the previous conversations of the user in the history
     cacheConversations(conversationsHistory, user.conversationHistory, userId);
-
-    res.status(200).json(user.conversationHistory);
+    // To add recent product list
+    res.status(200).json({
+        conversations: user.conversationHistory,
+        products: user.suggestedProducts
+    });
 };
 
 export const addConversations = async (req, res, next) => {
@@ -49,9 +54,16 @@ export const addConversations = async (req, res, next) => {
     await user.save();
 
     try {
+        // Parsing the JSON response
         const temp = JSON.parse(response.content);
+        // Product Ids of the suggested products
         const product_ids = temp.product_ids;
+        // Finding the products using the Product Ids
         const products = await Product.find({ _id: { $in: product_ids } });
+        // Adding the Product Ids in the suggested product (for the current user)
+        await user.updateOne({
+            $push: { suggestedProducts: { $each: product_ids } }
+        });
         res.status(200).json({ message: temp.response, products });
     } catch (err) {
         res.status(200).json({ message: response.content, products: [] });
@@ -71,7 +83,7 @@ export const deleteConversations = async (req, res, next) => {
 
     // Removing the conversation Ids from conversation history of the user
     await user.updateOne(
-        { $set: { conversationHistory: [] } },
+        { $set: { conversationHistory: [], suggestedProducts: [] } },
         { new: true, runValidators: true }
     );
 
