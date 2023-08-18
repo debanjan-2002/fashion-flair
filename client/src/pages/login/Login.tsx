@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginData } from "../../interfaces/user";
+import { useNavigate } from "react-router-dom";
 import * as api from "../../api/auth";
 import Header from "../../components/layout/header/Header";
 import Footer from "../../components/layout/footer/Footer";
@@ -8,7 +9,15 @@ import Footer from "../../components/layout/footer/Footer";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { setLoggedIn } = useAuth();
+    const { loggedIn, setLoggedIn } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (loggedIn) {
+            console.log("logged in already.");
+            navigate("/chat");
+        }
+    }, [loggedIn]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +44,10 @@ function Login() {
             <Header />
             <div
                 className="flex flex-col items-center justify-center flex-1 bg-cover bg-center"
-                style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/login-bg.png)" }}
+                style={{
+                    backgroundImage:
+                        "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/login-bg.png)",
+                }}
             >
                 <div className="flex flex-col bg-white bg-opacity-40 backdrop-blur-lg rounded-xl p-12 w-96 space-y-6 relative shadow-md border border-pink-600">
                     <a
