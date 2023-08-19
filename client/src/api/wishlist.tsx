@@ -54,4 +54,19 @@ const DeleteFromWishlist = async (
     return data;
 };
 
-export { AddToWishlist, FetchWishlist, DeleteFromWishlist };
+const DeleteAllFromWishlist = async (
+): Promise<any> => {
+    const auth = localStorage.getItem("auth");
+    const response = await fetch("http://localhost:3000/api/wishlist/all", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": auth!,
+        }
+    });
+    if (!response.ok) throw new Error("API Error: Delete wishlist");
+    const data = await response.json();
+    return data;
+};
+
+export { AddToWishlist, FetchWishlist, DeleteFromWishlist , DeleteAllFromWishlist};

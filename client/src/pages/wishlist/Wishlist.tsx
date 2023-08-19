@@ -33,6 +33,10 @@ const Wishlist: React.FC = () => {
         fetchProducts();
     }, [products]);
 
+    const clearWishList = async () => {
+        await api.DeleteAllFromWishlist();
+    }
+
     return (
         <>
             <section className="bg-zinc-900 h-screen w-screen p-6 flex">
@@ -45,8 +49,13 @@ const Wishlist: React.FC = () => {
                                     <p className="text-xl font-bold">My Wishlist</p>
                                 </div>
                                 <div className="flex flex-row gap-2 items-center">
-
-                                </div>
+                                <button
+                                    className="text-sm bg-pink-50 text-pink-600 font-medium border-2 border-pink-400 py-2 px-4 rounded-lg"
+                                    onClick={clearWishList}
+                                >
+                                    Clear Wish list
+                                </button>
+                            </div>
                             </div>
                         </div>
                         <ProductCatalog products={products} />
