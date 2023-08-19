@@ -20,11 +20,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
     const handleWishlistClick = async () => {
         if (isLiked) {
+            setIsLiked(false);
             await api.DeleteFromWishlist(id, "LIKED");
         } else {
+            setIsLiked(true);
             await api.AddToWishlist(id, "LIKED");
         }
-        setIsLiked(!isLiked);
+        
     };
 
     return (
@@ -43,13 +45,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 <div className="text-gray-600">$ {price}</div>
                 <button
                     onClick={handleWishlistClick}
-                    className={`text-gray-400 hover:text-rose-400 flex-shrink-0 ${
-                        isLiked || liked ? "text-rose-400" : ""
+                    className={`text-rose-400 hover:text-rose-400 flex-shrink-0 ${
+                        (!isLiked && !liked) || (!isLiked) ? "text-gray-400" : ""
                     }`}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        fill={isLiked ? "#FB7185" : "none"}
+                        fill={(!isLiked && !liked) || (!isLiked) ? "none" : "#FB7185"}
                         viewBox="0 0 24 24"
                         strokeWidth={2.5}
                         stroke="currentColor"

@@ -9,13 +9,15 @@ import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
 import { Slide } from "react-awesome-reveal";
+import TimedSuggestionBox from "../suggestion/Suggestion";
 
 const ChatSection = () => {
     const [userInput, setUserInput] = useState("");
-    const [enabled, setEnabled] = useState<boolean>(false);
+    const [enabled, setEnabled] = useState<boolean>(true);
     const [messages, setMessages] = useState<string[]>([]);
-    const [errorMessage, setErrorMessage] = useState(false);
-    const [chatbotReply, setChatbotReply] = useState<string>("");
+    const [showSuggestedProducts, setShowSuggestedProducts] = useState<boolean>(false);
+    const [_errorMessage, setErrorMessage] = useState(false);
+    const [_chatbotReply, setChatbotReply] = useState<string>("");
     const [showProductCatalog, setShowProductCatalog] = useState(false);
     const [productsData, setProductsData] = useState<Product[]>([]);
     const [isMicOn, setMicOn] = useState(false);
@@ -40,16 +42,27 @@ const ChatSection = () => {
         const fetchConversation = async () => {
             try {
                 // Fetch conversation data from the API
-                const response: any[] = await api.FetchConversation();
-                const arr = response.map((data) => data.text);
+                const response: any = await api.FetchConversation();
+                const arr = response.conversations.map((data: { text: any; }) => data.text);
                 // Set fetched conversation as initial messages
                 setMessages(arr);
+
+                const products = response.products.map((product: any) => {
+                    return {
+                        id: product._id,
+                        imageSrc: product.images[0].url,
+                        productName: product.name,
+                        price: product.price,
+                        liked: product.liked,
+                    };
+                });
+                setProductsData(products);
             } catch (error) {
                 console.error("Error:", error);
             }
         };
         fetchConversation();
-    }, []);
+    }, [showSuggestedProducts]);
 
     // Record Voice and change to Text
     const voiceToText = () => {
@@ -62,6 +75,9 @@ const ChatSection = () => {
             SpeechRecognition.stopListening();
         }
     };
+
+    const toggleShowSuggestedProducts = () => setShowSuggestedProducts(!showSuggestedProducts)
+
     useEffect(() => {
         setUserInput(transcript);
     }, [transcript]);
@@ -74,7 +90,7 @@ const ChatSection = () => {
     // Handle Key press
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            if(!enabled) sendMessage();
+            if(enabled) sendMessage();
             else sendAlert();
             //   e.preventDefault();
         }
@@ -97,11 +113,14 @@ const ChatSection = () => {
         // e.preventDefault();
         if (userInput.trim() !== "") {
             setErrorMessage(false);
-            setEnabled(true);
+            setEnabled(false);
+            setShowProductCatalog(false); //stop showing product catalog
             // Add the user's message to the chat
             addNewMessage(userInput);
             // Simulate chatbot's reply
             await simulateChatbotReply();
+            setEnabled(true);
+            setShowProductCatalog(true); //show again
             resetTranscript();
         } else {
             setErrorMessage(true);
@@ -114,10 +133,7 @@ const ChatSection = () => {
         addNewMessage("Chatbot is typing...");
         const query = userInput;
         setUserInput(""); // Clear user input field
-        setShowProductCatalog(false); //stop showing product catalog
         await sendQueryToChatbot(query);
-        setShowProductCatalog(true); //show again
-        setEnabled(false);
     };
 
     // Send user's query to the chatbot and process the response
@@ -127,13 +143,17 @@ const ChatSection = () => {
             const data = await api.AddConversation(query, "user");
             // Update chatbot's reply message
             setChatbotReply(data.message);
-            const productsArray = data.products.map((product: any) => {
-                return {
-                    id: product._id,
-                    imageSrc: product.images[0].url,
-                    productName: product.name,
-                    price: product.price,
-                };
+            const productsArray = productsData;
+            data.products.map((product: any) => {
+                productsArray.push(
+                    {
+                        id: product._id,
+                        imageSrc: product.images.length ? product.images[0].url : null,
+                        productName: product.name,
+                        price: product.price,
+                        liked: product.liked,
+                    }
+                );
             });
             // Update the products data
             setProductsData(productsArray);
@@ -159,6 +179,7 @@ const ChatSection = () => {
         setChatbotReply("");
         setShowProductCatalog(false);
         setErrorMessage(false);
+        setProductsData([]);
 
         try {
             // Delete conversation history from the server
@@ -185,118 +206,117 @@ const ChatSection = () => {
                                 <p className="text-xl font-medium">Chat bot</p>
                             </div>
                             <div className="flex flex-row gap-2 items-center">
-                                {/* <button
+                                <button
+                                    id="targetButton"
                                     className="text-sm bg-indigo-50 text-indigo-600 font-medium border-2 border-indigo-400 py-2 px-4 rounded-lg"
-                                    onClick={() =>
-                                        setShowProductCatalog(
-                                            !showProductCatalog
-                                        )
-                                    }
+                                    onClick={toggleShowSuggestedProducts}
                                 >
-                                    {showProductCatalog
+                                    {showSuggestedProducts
                                         ? "Hide Suggested Products"
                                         : "Show Suggested Products"}
-                                </button> */}
+                                </button>
                                 <button
                                     className="text-sm bg-pink-50 text-pink-600 font-medium border-2 border-pink-400 py-2 px-4 rounded-lg"
                                     onClick={terminateChat}
                                 >
                                     Terminate Chat
                                 </button>
+                                <TimedSuggestionBox suggestion="To see past products, click here" targetButtonId="targetButton" />
                             </div>
                         </div>
                         <div
                             ref={chatBoxRef}
                             className="messages w-full overflow-y-auto overflow-x-clip mb-4 p-4 bg-pink-50 rounded-2xl mt-4"
                         >
-                            {messages.map((message, index) => (
-                                
-                                index % 2 === 0
-                                ? <Slide direction="right" delay={400} duration={1500} triggerOnce cascade>
-                                <div
-                                    key={index}
-                                    className={`mb-2 ${
-                                        index % 2 === 0
-                                            ? "text-right"
-                                            : "text-left"
-                                    }`}
-                                >
-                                    <div
-                                        className={`inline-block py-2 px-4 rounded-lg ${
-                                            index % 2 === 0
-                                                ? "bg-white shadow-lg text-black"
-                                                : "bg-white shadow-lg text-black"
-                                        }`}
-                                    >
-                                        {index % 2 === 0 && (
-                                            <div>{message}</div>
-                                        )}
-                                        {index % 2 !== 0 && (
-                                            <div
-                                                className="my-2 whitespace-pre-line"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: isJson(message)
-                                                        ? JSON.parse(message)
-                                                              .response
-                                                        : message ==
-                                                          "Chatbot is typing..."
-                                                        ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                      </svg> ${message}`
-                                                        : message,
-                                                }}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                                </Slide>
-                                : <Slide direction="left" delay={400} duration={1000} triggerOnce cascade>
-                                <div
-                                    key={index}
-                                    className={`mb-2 ${
-                                        index % 2 === 0
-                                            ? "text-right"
-                                            : "text-left"
-                                    }`}
-                                >
-                                    <div
-                                        className={`inline-block py-2 px-4 rounded-lg ${
-                                            index % 2 === 0
-                                                ? "bg-white shadow-lg text-black"
-                                                : "bg-white shadow-lg text-black"
-                                        }`}
-                                    >
-                                        {index % 2 === 0 && (
-                                            <div>{message}</div>
-                                        )}
-                                        {index % 2 !== 0 && (
-                                            <div
-                                                className="my-2 whitespace-pre-line"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: isJson(message)
-                                                        ? JSON.parse(message)
-                                                              .response
-                                                        : message ==
-                                                          "Chatbot is typing..."
-                                                        ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                      </svg> ${message}`
-                                                        : message,
-                                                }}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                                </Slide>
-                                
-                            ))}
-                            {showProductCatalog ? (
+                            {showSuggestedProducts ? (
                                 <ProductCatalog products={productsData} />
                             ) : (
-                                <></>
+                                messages.map((message, index) => (
+                                    index % 2 === 0
+                                    ? <Slide direction="right" delay={400} duration={1500} triggerOnce cascade>
+                                        <div
+                                            key={index}
+                                            className={`mb-2 ${
+                                                index % 2 === 0
+                                                    ? "text-right"
+                                                    : "text-left"
+                                            }`}
+                                        >
+                                            <div
+                                                className={`inline-block py-2 px-4 rounded-lg ${
+                                                    index % 2 === 0
+                                                        ? "bg-white shadow-lg text-black"
+                                                        : "bg-white shadow-lg text-black"
+                                                }`}
+                                            >
+                                                {index % 2 === 0 && (
+                                                    <div>{message}</div>
+                                                )}
+                                                {index % 2 !== 0 && (
+                                                    <div
+                                                        className="my-2 whitespace-pre-line"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: isJson(message)
+                                                                ? JSON.parse(message)
+                                                                    .response
+                                                                : message ==
+                                                                "Chatbot is typing..."
+                                                                ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg> ${message}`
+                                                                : message,
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Slide>
+                                    : <Slide direction="left" delay={400} duration={1000} triggerOnce cascade>
+                                        <div
+                                            key={index}
+                                            className={`mb-2 ${
+                                                index % 2 === 0
+                                                    ? "text-right"
+                                                    : "text-left"
+                                            }`}
+                                        >
+                                            <div
+                                                className={`inline-block py-2 px-4 rounded-lg ${
+                                                    index % 2 === 0
+                                                        ? "bg-white shadow-lg text-black"
+                                                        : "bg-white shadow-lg text-black"
+                                                }`}
+                                            >
+                                                {index % 2 === 0 && (
+                                                    <div>{message}</div>
+                                                )}
+                                                {index % 2 !== 0 && (
+                                                    <div
+                                                        className="my-2 whitespace-pre-line"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: isJson(message)
+                                                                ? JSON.parse(message)
+                                                                    .response
+                                                                : message ==
+                                                                "Chatbot is typing..."
+                                                                ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg> ${message}`
+                                                                : message,
+                                                        }}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Slide>
+                                    
+                                ))
                             )}
+                           {showProductCatalog  && !showSuggestedProducts? (
+                                <ProductCatalog products={productsData} />
+                            ) : <></>}
                         </div>
                     </div>
                     <div className="chatbox flex flex-row justify-between items-center gap-2 absolute bottom-10 w-full px-6 py-2 border-2 border-amber-400 rounded-2xl">
