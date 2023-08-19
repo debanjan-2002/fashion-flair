@@ -61,3 +61,12 @@ export const deleteItemFromWishList = async (req, res, next) => {
 
     return res.json({ message: "Item deleted from wishlist successfully!" });
 };
+
+export const deleteWishList = async (req, res, next) => {
+    // get the user id from session
+    const { userId } = req.session;
+    // find the user and update the events field
+    await User.findByIdAndUpdate(userId, { $set: { events: [] } });
+
+    return res.json({ message: "Wishlist cleared successfully!" });
+};
