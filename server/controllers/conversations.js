@@ -77,12 +77,31 @@ export const addConversations = async (req, res, next) => {
         // Product Ids of the suggested products
         const product_ids = temp.product_ids;
 
+        // Finding the product ids of the suggested products which are also in wishlist
+        const likedProducts = user.events.map(event => {
+            if (product_ids.includes(event.product_id.toString())) {
+                return event.product_id.toString();
+            }
+        });
+
+        // Finding the products that are suggested
         const products = await Product.find({ _id: { $in: product_ids } });
+        // Finding the products by adding the liked field depending upon whether it is there is wishlist or not
+        const updatedProducts = products.map(product => {
+            if (likedProducts.includes(product._id.toString())) {
+                return { ...product._doc, liked: true };
+            }
+            return { ...product._doc, liked: false };
+        });
+
         // Adding the Product Ids in the suggested product (for the current user)
         await user.updateOne({
             $addToSet: { suggestedProducts: { $each: product_ids } }
         });
-        res.status(200).json({ message: temp.response, products });
+        res.status(200).json({
+            message: temp.response,
+            products: updatedProducts
+        });
     } catch (err) {
         res.status(200).json({ message: response.content, products: [] });
     }
