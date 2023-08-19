@@ -26,9 +26,9 @@ export const getConversations = async (req, res, next) => {
     // Setting the isLiked property depending upon whether the suggested product is in wishlist or not
     const products = user.suggestedProducts.map(product => {
         if (likedProducts.includes(product._id.toString())) {
-            return { ...product._doc, isLiked: true };
+            return { ...product._doc, liked: true };
         }
-        return { ...product._doc, isLiked: false };
+        return { ...product._doc, liked: false };
     });
 
     res.status(200).json({
