@@ -12,10 +12,28 @@ export const getConversations = async (req, res, next) => {
 
     // On load, add the previous conversations of the user in the history
     cacheConversations(conversationsHistory, user.conversationHistory, userId);
-    // To add recent product list
+
+    // Finding the product ids of the suggested products
+    const product_ids = user.suggestedProducts.map(product =>
+        product._id.toString()
+    );
+    // Finding the product ids of the suggested products which are also in wishlist
+    const likedProducts = user.events.map(event => {
+        if (product_ids.includes(event.product_id.toString())) {
+            return event.product_id.toString();
+        }
+    });
+    // Setting the isLiked property depending upon whether the suggested product is in wishlist or not
+    const products = user.suggestedProducts.map(product => {
+        if (likedProducts.includes(product._id.toString())) {
+            return { ...product._doc, isLiked: true };
+        }
+        return { ...product._doc, isLiked: false };
+    });
+
     res.status(200).json({
         conversations: user.conversationHistory,
-        products: user.suggestedProducts
+        products
     });
 };
 
