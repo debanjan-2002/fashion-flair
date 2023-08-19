@@ -77,21 +77,10 @@ export const addConversations = async (req, res, next) => {
         // Product Ids of the suggested products
         const product_ids = temp.product_ids;
 
-        // Finding the products using the Product Ids
-        const allProducts = await Product.find({ _id: { $in: product_ids } }).lean();
-
-        let products = [];
-        for (const product of allProducts) {
-            if (user.events.find(item => item.product_id == product._id)) {
-                products.push({ ...product, liked: true })
-            } else {
-                products.push({ ...product, liked: false })
-            }
-        }
-
+        const products = await Product.find({ _id: { $in: product_ids } });
         // Adding the Product Ids in the suggested product (for the current user)
         await user.updateOne({
-            $push: { suggestedProducts: { $each: product_ids } }
+            $addToSet: { suggestedProducts: { $each: product_ids } }
         });
         res.status(200).json({ message: temp.response, products });
     } catch (err) {
