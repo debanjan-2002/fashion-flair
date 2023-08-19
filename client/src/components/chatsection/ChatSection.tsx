@@ -381,7 +381,7 @@ const ChatSection = () => {
                     <p className="text-center text-zinc-500 font-medium absolute bottom-0 w-full">
                         Fashion Flair v0.1 | A proof of concept project |{" "}
                         <a
-                            href="https://github.com/adrishyantee/fashion-flair-test"
+                            href="https://github.com/debanjan-2002/fashion-flair"
                             className="text-blue-400"
                         >
                             View source code
