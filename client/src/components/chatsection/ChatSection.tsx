@@ -10,6 +10,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import { Slide } from "react-awesome-reveal";
 import TimedSuggestionBox from "../suggestion/TimedSuggestionBox";
+import toast from "react-hot-toast/headless"
 
 const ChatSection = () => {
     const [userInput, setUserInput] = useState("");
@@ -23,7 +24,6 @@ const ChatSection = () => {
     const [isMicOn, setMicOn] = useState(false);
     const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
         useSpeechRecognition();
-
     const[isFirstLoad, setFirstLoad] = useState(false);
 
     if (!browserSupportsSpeechRecognition) {
@@ -146,6 +146,7 @@ const ChatSection = () => {
             const data = await api.AddConversation(query, "user");
             // Update chatbot's reply message
             setChatbotReply(data.message);
+            toast(data.message.slice(0,30) + "...");
             const productsArray : any[] = [];
             data.products.map((product: any) => {
                 productsArray.push(

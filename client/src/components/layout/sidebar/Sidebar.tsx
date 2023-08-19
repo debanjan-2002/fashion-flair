@@ -1,15 +1,19 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import "./Sidebar.css";
+import { toast } from "react-hot-toast";
 
 function Sidebar() {
     const { loggedIn, setLoggedIn } = useAuth();
+    const navigate = useNavigate();
+
     if (!loggedIn) window.location.href = "/login";
     // to logout and redirect to the url
     const handleLogout = () => {
         localStorage.removeItem("auth");
         setLoggedIn(false);
-        window.location.href = "/login";
+        navigate('/login');
+        toast.success("Successfully logged out!")
     };
     return (
         <div className="sidebar flex flex-col items-center justify-between h-full w-72 py-3 pr-6 text-white">

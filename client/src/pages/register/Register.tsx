@@ -5,6 +5,7 @@ import { RegisterData } from "../../interfaces/user";
 import Header from "../../components/layout/header/Header";
 import Footer from "../../components/layout/footer/Footer";
 import { useAuth } from "../../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 const Register: React.FC = () => {
     const [email, setEmail] = useState("");
@@ -33,6 +34,7 @@ const Register: React.FC = () => {
 
         try {
             await api.RegisterUser(userData);
+            toast.success("Successfully registered!");
             navigate("/login");
         } catch (error) {
             console.error("Error:", error);
@@ -65,7 +67,7 @@ const Register: React.FC = () => {
                             <label className="text-sm border-pink-600 text-zinc-800 block">
                                 Email
                             </label>
-                            <input
+                            <input required
                                 className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
                                 type="email"
                                 value={email}
@@ -76,7 +78,7 @@ const Register: React.FC = () => {
                             <label className="text-sm border-pink-600 text-zinc-800 block">
                                 Username
                             </label>
-                            <input
+                            <input required
                                 className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
                                 type="text"
                                 value={username}
@@ -87,7 +89,7 @@ const Register: React.FC = () => {
                             <label className="text-sm text-gray-700 block">
                                 Password
                             </label>
-                            <input
+                            <input required
                                 className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
                                 type="password"
                                 value={password}

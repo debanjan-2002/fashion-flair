@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { useAuth } from "../contexts/AuthContext";
 import { LoginData, RegisterData } from "../interfaces/user";
 
@@ -16,7 +17,10 @@ const RegisterUser = async (userData: RegisterData): Promise<any> => {
         },
         body: JSON.stringify(userData),
     });
-    if (!response.ok) throw new Error("API Error: Register user");
+    if (!response.ok){
+        toast.error("User already exists!");
+        throw new Error("API Error: Register user");
+    } 
     const data = await response.json();
     return data;
 };
@@ -35,7 +39,10 @@ const LoginUser = async (userData: LoginData): Promise<any> => {
         },
         body: JSON.stringify(userData),
     });
-    if (!response.ok) throw new Error("API Error: Login user");
+    if (!response.ok) {
+        toast.error("Please provide correct credentials!")
+        throw new Error("API Error: Login user");
+    }
     const data = await response.json();
     return data;
 };
