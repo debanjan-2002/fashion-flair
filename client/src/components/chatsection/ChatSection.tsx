@@ -74,8 +74,9 @@ const ChatSection = () => {
     // Handle Key press
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
+            if(!enabled) sendMessage();
+            else sendAlert();
             //   e.preventDefault();
-            sendMessage();
         }
     };
 
@@ -113,7 +114,9 @@ const ChatSection = () => {
         addNewMessage("Chatbot is typing...");
         const query = userInput;
         setUserInput(""); // Clear user input field
+        setShowProductCatalog(false); //stop showing product catalog
         await sendQueryToChatbot(query);
+        setShowProductCatalog(true); //show again
         setEnabled(false);
     };
 
@@ -248,7 +251,7 @@ const ChatSection = () => {
                                     </div>
                                 </div>
                                 </Slide>
-                                : <Slide direction="left" delay={400} duration={2000} triggerOnce cascade>
+                                : <Slide direction="left" delay={400} duration={1000} triggerOnce cascade>
                                 <div
                                     key={index}
                                     className={`mb-2 ${
