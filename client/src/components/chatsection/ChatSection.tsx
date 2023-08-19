@@ -9,7 +9,7 @@ import SpeechRecognition, {
     useSpeechRecognition,
 } from "react-speech-recognition";
 import { Slide } from "react-awesome-reveal";
-import TimedSuggestionBox from "../suggestion/Suggestion";
+import TimedSuggestionBox from "../suggestion/TimedSuggestionBox";
 
 const ChatSection = () => {
     const [userInput, setUserInput] = useState("");
@@ -23,6 +23,8 @@ const ChatSection = () => {
     const [isMicOn, setMicOn] = useState(false);
     const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
         useSpeechRecognition();
+
+    const[isFirstLoad, setFirstLoad] = useState(false);
 
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
@@ -56,6 +58,7 @@ const ChatSection = () => {
                         liked: product.liked,
                     };
                 });
+                if(products.length!==0) setFirstLoad(true);
                 setProductsData(products);
             } catch (error) {
                 console.error("Error:", error);
@@ -143,7 +146,7 @@ const ChatSection = () => {
             const data = await api.AddConversation(query, "user");
             // Update chatbot's reply message
             setChatbotReply(data.message);
-            const productsArray = productsData;
+            const productsArray : any[] = [];
             data.products.map((product: any) => {
                 productsArray.push(
                     {
@@ -214,6 +217,9 @@ const ChatSection = () => {
                                     {showSuggestedProducts
                                         ? "Hide Suggested Products"
                                         : "Show Suggested Products"}
+                                        {
+                                            (isFirstLoad) && <TimedSuggestionBox suggestion="To see past products, click here" targetButtonId="targetButton" />
+                                        }
                                 </button>
                                 <button
                                     className="text-sm bg-pink-50 text-pink-600 font-medium border-2 border-pink-400 py-2 px-4 rounded-lg"
@@ -221,7 +227,6 @@ const ChatSection = () => {
                                 >
                                     Terminate Chat
                                 </button>
-                                <TimedSuggestionBox suggestion="To see past products, click here" targetButtonId="targetButton" />
                             </div>
                         </div>
                         <div
