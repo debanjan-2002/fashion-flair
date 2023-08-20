@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginData } from "../../interfaces/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as api from "../../api/auth";
 import Header from "../../components/layout/header/Header";
 import Footer from "../../components/layout/footer/Footer";
@@ -18,7 +18,7 @@ function Login() {
             console.log("logged in already.");
             navigate("/chat");
         }
-    }, [loggedIn]);
+    }, [loggedIn, navigate]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,8 +34,8 @@ function Login() {
             localStorage.setItem("auth", data.auth);
             // Update auth context state to true
             setLoggedIn(true);
-            toast.success("Succesfully logged in!")
-            navigate('/chat');
+            toast.success("Succesfully logged in!");
+            navigate("/chat");
         } catch (error) {
             console.error("Error:", error);
         }
@@ -52,13 +52,13 @@ function Login() {
                 }}
             >
                 <div className="flex flex-col bg-white bg-opacity-40 backdrop-blur-lg rounded-xl p-12 w-96 space-y-6 relative shadow-md border border-pink-600">
-                    <a
-                        href="/register"
+                    <Link
+                        to="/register"
                         className="text-right text-pink-600  p-8 hover:underline text-xs"
                         style={{ position: "absolute", top: "0", right: "0" }}
                     >
                         Not registered? Register here
-                    </a>
+                    </Link>
                     <h2 className="text-2xl font-semibold mb-4 text-black">
                         Log In
                     </h2>
@@ -67,7 +67,8 @@ function Login() {
                             <label className="text-sm border-pink-600 text-zinc-800 block">
                                 Email
                             </label>
-                            <input required
+                            <input
+                                required
                                 className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
                                 type="email"
                                 value={email}
@@ -78,7 +79,8 @@ function Login() {
                             <label className="text-sm text-gray-700 block">
                                 Password
                             </label>
-                            <input required
+                            <input
+                                required
                                 className="rounded shadow-lg border-2 border-transparent bg-white bg-opacity-10 text-black w-full py-2 px-3 focus:outline-0 focus:ring-0 focus:border-pink-500"
                                 type="password"
                                 value={password}
