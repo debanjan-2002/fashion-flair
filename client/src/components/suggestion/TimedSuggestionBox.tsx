@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 
 interface BetterArrowSuggestionBoxProps {
   suggestion: string;
@@ -18,16 +18,16 @@ const TimedSuggestionBox: FC<BetterArrowSuggestionBoxProps> = ({ suggestion, tar
 
   return (
     <>
-{visible && (
-  <div className="absolute inline-block z-10 animate-bounce">
-    <div className="w-12 h-8 bg-amber-300 absolute top-20 left-0 -mt-4 -translate-x-[7.25rem] translate-y-2 transform -rotate-45" />
-    <div className="bg-amber-300 text-zinc-800 p-4 rounded-lg shadow-md relative top-20 -translate-x-[13.25rem]" style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-      <p className="text-sm font-medium ">{suggestion}</p>
-    </div>
-  </div>
-)}
-
-
+      {visible && (
+        <div className="position-relative">
+          <div className="absolute z-10 animate-bounce">
+            <div className="w-12 h-8 bg-amber-300 absolute top-12 left-0 -mt-4 translate-x-16 translate-y-2 transform -rotate-45" />
+            <div className="bg-amber-300 text-zinc-800 p-4 top-12 rounded-lg shadow-md relative -translate-x-8" style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
+              <p className="text-sm font-medium">{suggestion}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
