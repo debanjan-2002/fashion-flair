@@ -24,7 +24,7 @@ const ChatSection = () => {
     const [isMicOn, setMicOn] = useState(false);
     const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
         useSpeechRecognition();
-    const[isFirstLoad, setFirstLoad] = useState(false);
+    const [isFirstLoad, setFirstLoad] = useState(false);
 
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>;
@@ -58,7 +58,7 @@ const ChatSection = () => {
                         liked: product.liked,
                     };
                 });
-                if(products.length!==0) setFirstLoad(true);
+                if (products.length !== 0) setFirstLoad(true);
                 setProductsData(products);
             } catch (error) {
                 console.error("Error:", error);
@@ -93,7 +93,7 @@ const ChatSection = () => {
     // Handle Key press
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            if(enabled) sendMessage();
+            if (enabled) sendMessage();
             else sendAlert();
             //   e.preventDefault();
         }
@@ -147,8 +147,8 @@ const ChatSection = () => {
             // Update chatbot's reply message
             setChatbotReply(data.message);
             //add a toast message
-            toast(data.message.slice(0,30) + "...");
-            const productsArray : any[] = [];
+            toast(data.message.slice(0, 30) + "...");
+            const productsArray: any[] = [];
             data.products.map((product: any) => {
                 productsArray.push(
                     {
@@ -196,7 +196,7 @@ const ChatSection = () => {
 
     return (
         <>
-            <div className="rounded rounded-3xl bg-white grow p-6 flex">
+            <div className="rounded-3xl bg-white grow p-6 flex">
                 <div className="container mx-auto relative grow">
                     <div className="flex flex-col w-full h-full items-center">
                         <div className="flex flex-row w-full pb-3 border-b-2 items-center justify-between">
@@ -219,9 +219,9 @@ const ChatSection = () => {
                                     {showSuggestedProducts
                                         ? "Hide Suggested Products"
                                         : "Show Suggested Products"}
-                                        {
-                                            (isFirstLoad) && <TimedSuggestionBox suggestion="To see past products, click here" targetButtonId="targetButton" />
-                                        }
+                                    {
+                                        (isFirstLoad) && <TimedSuggestionBox suggestion="To see past products, click here" targetButtonId="targetButton" />
+                                    }
                                 </button>
                                 <button
                                     className="text-sm bg-pink-50 text-pink-600 font-medium border-2 border-pink-400 py-2 px-4 rounded-lg"
@@ -240,88 +240,84 @@ const ChatSection = () => {
                             ) : (
                                 messages.map((message, index) => (
                                     index % 2 === 0
-                                    ? <Slide direction="right" delay={400} duration={1500} triggerOnce cascade>
-                                        <div
-                                            key={index}
-                                            className={`mb-2 ${
-                                                index % 2 === 0
-                                                    ? "text-right"
-                                                    : "text-left"
-                                            }`}
-                                        >
+                                        ? <Slide direction="right" delay={400} duration={1500} triggerOnce cascade>
                                             <div
-                                                className={`inline-block py-2 px-4 rounded-lg ${
-                                                    index % 2 === 0
-                                                        ? "bg-white shadow-lg text-black"
-                                                        : "bg-white shadow-lg text-black"
-                                                }`}
+                                                key={index}
+                                                className={`mb-2 ${index % 2 === 0
+                                                        ? "text-right"
+                                                        : "text-left"
+                                                    }`}
                                             >
-                                                {index % 2 === 0 && (
-                                                    <div>{message}</div>
-                                                )}
-                                                {index % 2 !== 0 && (
-                                                    <div
-                                                        className="my-2 whitespace-pre-line"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: isJson(message)
-                                                                ? JSON.parse(message)
-                                                                    .response
-                                                                : message ==
-                                                                "Chatbot is typing..."
-                                                                ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <div
+                                                    className={`inline-block py-2 px-4 rounded-lg ${index % 2 === 0
+                                                            ? "bg-white shadow-lg text-black"
+                                                            : "bg-white shadow-lg text-black"
+                                                        }`}
+                                                >
+                                                    {index % 2 === 0 && (
+                                                        <div>{message}</div>
+                                                    )}
+                                                    {index % 2 !== 0 && (
+                                                        <div
+                                                            className="my-2 whitespace-pre-line"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: isJson(message)
+                                                                    ? JSON.parse(message)
+                                                                        .response
+                                                                    : message ==
+                                                                        "Chatbot is typing..."
+                                                                        ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                             </svg> ${message}`
-                                                                : message,
-                                                        }}
-                                                    />
-                                                )}
+                                                                        : message,
+                                                            }}
+                                                        />
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Slide>
-                                    : <Slide direction="left" delay={400} duration={1000} triggerOnce cascade>
-                                        <div
-                                            key={index}
-                                            className={`mb-2 ${
-                                                index % 2 === 0
-                                                    ? "text-right"
-                                                    : "text-left"
-                                            }`}
-                                        >
+                                        </Slide>
+                                        : <Slide direction="left" delay={400} duration={1000} triggerOnce cascade>
                                             <div
-                                                className={`inline-block py-2 px-4 rounded-lg ${
-                                                    index % 2 === 0
-                                                        ? "bg-white shadow-lg text-black"
-                                                        : "bg-white shadow-lg text-black"
-                                                }`}
+                                                key={index}
+                                                className={`mb-2 ${index % 2 === 0
+                                                        ? "text-right"
+                                                        : "text-left"
+                                                    }`}
                                             >
-                                                {index % 2 === 0 && (
-                                                    <div>{message}</div>
-                                                )}
-                                                {index % 2 !== 0 && (
-                                                    <div
-                                                        className="my-2 whitespace-pre-line"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: isJson(message)
-                                                                ? JSON.parse(message)
-                                                                    .response
-                                                                : message ==
-                                                                "Chatbot is typing..."
-                                                                ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <div
+                                                    className={`inline-block py-2 px-4 rounded-lg ${index % 2 === 0
+                                                            ? "bg-white shadow-lg text-black"
+                                                            : "bg-white shadow-lg text-black"
+                                                        }`}
+                                                >
+                                                    {index % 2 === 0 && (
+                                                        <div>{message}</div>
+                                                    )}
+                                                    {index % 2 !== 0 && (
+                                                        <div
+                                                            className="my-2 whitespace-pre-line"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: isJson(message)
+                                                                    ? JSON.parse(message)
+                                                                        .response
+                                                                    : message ==
+                                                                        "Chatbot is typing..."
+                                                                        ? ` <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-rose-600 float-left" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                             </svg> ${message}`
-                                                                : message
-                                                        }}
-                                                    />
-                                                )}
+                                                                        : message
+                                                            }}
+                                                        />
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Slide>
-                                    
+                                        </Slide>
+
                                 ))
                             )}
-                           {showProductCatalog  && !showSuggestedProducts? (
+                            {showProductCatalog && !showSuggestedProducts ? (
                                 <ProductCatalog products={productsData} />
                             ) : <></>}
                         </div>
