@@ -1,10 +1,24 @@
-import mongoose from "mongoose";
-import Conversation from "./conversations.js";
-import Product from "./products.js";
+import mongoose, { Types } from "mongoose";
+import Conversation from "./conversations.ts";
+import Product from "./products.ts";
 
 const { Schema } = mongoose;
 
-const eventSchema = new Schema(
+interface IEvent {
+    event_type: string;
+    product_id: Types.ObjectId;
+}
+
+interface IUser {
+    email: string;
+    username: string;
+    password: string;
+    events: IEvent;
+    conversationHistory: Types.ObjectId[];
+    suggestedProducts: Types.ObjectId[];
+}
+
+const eventSchema = new Schema<IEvent>(
     {
         event_type: {
             type: String,
@@ -19,7 +33,7 @@ const eventSchema = new Schema(
     { timestamps: true }
 );
 
-const userSchema = new Schema({
+const userSchema = new Schema<IUser>({
     email: {
         type: String,
         required: true,
@@ -39,5 +53,5 @@ const userSchema = new Schema({
     suggestedProducts: [{ type: Schema.Types.ObjectId, ref: "Product" }]
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
 export default User;
