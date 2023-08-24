@@ -1,7 +1,27 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import { Types, model, Schema, Model, Document } from "mongoose";
 
-const productSchema = new Schema({
+interface IImages {
+    url: string;
+    alt_text?: string;
+}
+
+export interface IProducts extends Document {
+    _doc?: any;
+    name: string;
+    brand: string;
+    category: string;
+    description: string;
+    price: number;
+    color: string;
+    size: "XS" | "S" | "M" | "L" | "XL";
+    gender: "Male" | "Female" | "Unisex";
+    season: "Summer" | "Winter" | "All";
+    tags: Types.Array<string>;
+    images: Types.DocumentArray<IImages>;
+    rating: number;
+}
+
+const productSchema = new Schema<IProducts, Model<IProducts>>({
     name: {
         type: String,
         required: true
@@ -49,5 +69,5 @@ const productSchema = new Schema({
     }
 });
 
-const Product = mongoose.model("Product", productSchema);
+const Product = model<IProducts, Model<IProducts>>("Product", productSchema);
 export default Product;
