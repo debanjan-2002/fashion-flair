@@ -1,17 +1,35 @@
-import User from "../models/users.js";
-import Conversation from "../models/conversations.js";
-import Product from "../models/products.js";
-import { fetchResponse, conversationsHistory } from "../utils/fetchResponse.js";
-import { cacheConversations } from "../utils/cacheConversations.js";
+import User from "../models/users.ts";
+import Conversation from "../models/conversations.ts";
+import Product from "../models/products.ts";
+import { fetchResponse, conversationsHistory } from "../utils/fetchResponse.ts";
+import { cacheConversations } from "../utils/cacheConversations.ts";
+import { Request, Response, NextFunction } from "express";
+import ExpressError from "../utils/ExpressError.ts";
 
-export const getConversations = async (req, res, next) => {
+import { IProducts } from "../models/products.ts";
+import { IConversation } from "../models/conversations.ts";
+
+export const getConversations = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Retrieve the userId from the session
     const { userId } = req.session;
+    // Finding the user and populating necessary fields
     const user = await User.findById(userId)
-        .populate("conversationHistory")
-        .populate("suggestedProducts");
+        .populate<{ conversationHistory: IConversation[] }>(
+            "conversationHistory"
+        )
+        .populate<{ suggestedProducts: IProducts[] }>("suggestedProducts");
 
+    // If user is not found
+    // Probable reason is server error
+    if (!user) {
+        return new ExpressError("Server Error!", 500);
+    }
     // On load, add the previous conversations of the user in the history
-    cacheConversations(conversationsHistory, user.conversationHistory, userId);
+    cacheConversations(conversationsHistory, user.conversationHistory, userId!);
 
     // Finding the product ids of the suggested products
     const product_ids = user.suggestedProducts.map(product =>
@@ -37,15 +55,27 @@ export const getConversations = async (req, res, next) => {
     });
 };
 
-export const addConversations = async (req, res, next) => {
+export const addConversations = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Retrieve the userId from the session
     const { userId } = req.session;
+    // Retrieve the text and role from request body
     const { text, role } = req.body;
 
     // finding the current user
     const user = await User.findById(userId);
 
+    // If user is not found
+    // Probable reason is server error
+    if (!user) {
+        return new ExpressError("Server Error!", 500);
+    }
+
     // This provides the response to the new question
-    const response = await fetchResponse({ content: text, role }, userId);
+    const response = await fetchResponse({ content: text, role }, userId!);
     // console.log(response);
 
     // new question object
@@ -73,7 +103,7 @@ export const addConversations = async (req, res, next) => {
 
     try {
         // Parsing the JSON response
-        const temp = JSON.parse(response.content);
+        const temp = JSON.parse(response.content ?? "");
         // Product Ids of the suggested products
         const product_ids = temp.product_ids;
 
@@ -85,7 +115,9 @@ export const addConversations = async (req, res, next) => {
         });
 
         // Finding the products that are suggested
-        const products = await Product.find({ _id: { $in: product_ids } });
+        const products: IProducts[] = await Product.find({
+            _id: { $in: product_ids }
+        });
         // Finding the products by adding the liked field depending upon whether it is there is wishlist or not
         const updatedProducts = products.map(product => {
             if (likedProducts.includes(product._id.toString())) {
@@ -107,11 +139,23 @@ export const addConversations = async (req, res, next) => {
     }
 };
 
-export const deleteConversations = async (req, res, next) => {
+export const deleteConversations = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Retrieve the userId from the session
     const { userId } = req.session;
 
     //finding the current user
     const user = await User.findById(userId);
+
+    // If user is not found
+    // Probable reason is server error
+    if (!user) {
+        return new ExpressError("Server Error!", 500);
+    }
+
     // conversation Id list (which will be deleted)
     const conversationIds = user.conversationHistory;
 

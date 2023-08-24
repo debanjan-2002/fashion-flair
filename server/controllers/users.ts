@@ -1,9 +1,15 @@
-import User from "../models/users.js";
-import ExpressError from "../utils/ExpressError.js";
+import User from "../models/users.ts";
+import ExpressError from "../utils/ExpressError.ts";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
-export const register = async (req, res, next) => {
+export const register = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Retrieve the email, username, password from request body
     const { email, username, password } = req.body;
 
     // If any required parameter is missing
@@ -29,7 +35,12 @@ export const register = async (req, res, next) => {
     res.status(200).json({ message: "User registered successfully!" });
 };
 
-export const login = async (req, res, next) => {
+export const login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Retrieve the email, password from request body
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -45,9 +56,12 @@ export const login = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.password);
     // If the password matches, then user can be logged in
     if (isMatch) {
-        req.session.userId = user._id;
+        req.session.userId = user._id.toString();
         // sending jwt token that will be stored in local storage in front end
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET as Secret
+        );
         return res
             .status(200)
             .json({ message: "User logged in successfully!", auth: token });
@@ -58,7 +72,11 @@ export const login = async (req, res, next) => {
     }
 };
 
-export const logout = async (req, res, next) => {
+export const logout = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     // Remove the current user from session
     req.session.userId = "";
     res.status(200).json({ message: "User logout successful!" });
