@@ -1,9 +1,9 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import Product from "../models/products.js";
+import Product from "../models/products.ts";
 
-import { addNewConversationToHistory } from "../utils/cacheConversations.js";
-import { formatData } from "./formatData.js";
+import { addNewConversationToHistory } from "./cacheConversations.ts";
+import { formatData } from "./formatData.ts";
 
 dotenv.config();
 
@@ -21,7 +21,7 @@ const productCatelog = async () => {
     return catelog;
 };
 
-const getSystemMessage = data => {
+const getSystemMessage = (data: string) => {
     if (data) {
         return {
             role: "system",
@@ -41,7 +41,10 @@ product_ids: [This will contain the ids of the products that you will recommend]
 
 export const conversationsHistory = new Map();
 
-export const fetchResponse = async (question, id) => {
+export const fetchResponse = async (
+    question: { content: string; role: string },
+    id: string
+) => {
     addNewConversationToHistory(conversationsHistory, question, id);
 
     const catelog = await productCatelog();
@@ -55,7 +58,9 @@ export const fetchResponse = async (question, id) => {
             messages: message
         });
 
-        const answer = completion.choices[0].message;
+        const answer: { role: string; content: string | null } =
+            completion.choices[0].message;
+
         addNewConversationToHistory(conversationsHistory, answer, id);
 
         // console.log(JSON.parse(answer.content).response);
