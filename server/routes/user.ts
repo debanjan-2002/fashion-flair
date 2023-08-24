@@ -1,9 +1,9 @@
 import express from "express";
-import catchAsync from "../utils/catchAsync.js";
+import catchAsync from "../utils/catchAsync.ts";
 const router = express.Router();
 
-import { register, login, logout } from "../controllers/users.js";
-import { isUserLoggedIn } from "../middleware.js";
+import { register, login, logout } from "../controllers/users.ts";
+import { isUserLoggedIn } from "../middleware.ts";
 
 router.route("/register").post(isUserLoggedIn, catchAsync(register));
 router.route("/login").post(isUserLoggedIn, catchAsync(login));
