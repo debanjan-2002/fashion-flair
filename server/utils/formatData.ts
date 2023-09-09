@@ -1,18 +1,6 @@
-import Product from "../models/products.js";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
+import { IProducts } from "../models/products.ts";
 
-// dotenv.config();
-
-// const dbURL = process.env.MONGO_URL;
-// mongoose
-//     .connect(dbURL)
-//     .then(() => console.log("Connected to DB successfully!"))
-//     .catch(err => console.log(err));
-
-export const formatData = products => {
-    // const products = await Product.find({});
-    // console.log(products);
+export const formatData = (products: IProducts[]) => {
     let s = ``;
     products.forEach(product => {
         s += `${product.id},`;
@@ -32,6 +20,3 @@ export const formatData = products => {
     s.trim();
     return s;
 };
-// formatData();
-// .then(data => console.log(data))
-// .catch(err => console.log(err));

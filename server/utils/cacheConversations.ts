@@ -1,7 +1,9 @@
+import { IConversation } from "../models/conversations.ts";
+
 export const cacheConversations = (
-    conversationsHistory,
-    conversationFromDB,
-    id
+    conversationsHistory: Map<string, { role: string; content: string }[]>,
+    conversationFromDB: IConversation[],
+    id: string
 ) => {
     if (!conversationsHistory.has(id)) {
         conversationsHistory.clear();
@@ -17,13 +19,13 @@ export const cacheConversations = (
 };
 
 export const addNewConversationToHistory = (
-    conversationHistory,
-    question,
-    id
+    conversationHistory: Map<string, { role: string; content: string }[]>,
+    question: { content: string | null; role: string },
+    id: string
 ) => {
     if (conversationHistory.has(id)) {
         conversationHistory
-            .get(id)
-            .push({ role: question.role, content: question.content });
+            ?.get(id)
+            ?.push({ role: question.role, content: question.content ?? "" });
     }
 };

@@ -1,22 +1,24 @@
-import User from "../models/users.js";
-import Conversation from "../models/conversations.js";
-import Product from "../models/products.js";
+import User from "../models/users.ts";
+import Conversation from "../models/conversations.ts";
+import Product from "../models/products.ts";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const dbURL = process.env.MONGO_URL;
+const dbURL = process.env.MONGO_URL!;
 mongoose
     .connect(dbURL)
     .then(() => console.log("Connected to DB successfully!"))
     .catch(err => console.log(err));
 
-const addDummyConversations = async userId => {
+const addDummyConversations = async (userId: string) => {
     await Conversation.deleteMany({});
     const user = await User.findById(userId);
     const role = ["User", "Assistant"];
     let index = 0;
+
+    if (!user) return;
 
     for (let i = 0; i < 5; i++) {
         const conversation = new Conversation({
